@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BrainWave</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="auth-logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="logo-img">
+                        <rect x="0" y="0" width="40" height="40" rx="8" ry="8" fill="#fbbf24"/>
+                        <text x="20" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1e3a8a">B</text>
+                    </svg>
+                    <h1>BrainWave</h1>
+                </div>
+                <p>Welcome back! Please sign in to your account.</p>
+            </div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="login-btn">Log In</button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+                <p><a href="forgot-password.html">Forgot your password?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Basic validation
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            // Simulate login process
+            showLoading();
+            
+            // In a real application, this would make an API call to authenticate
+            setTimeout(() => {
+                // Get users from localStorage to check role
+                const users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+                
+                if (!user) {
+                    hideLoading();
+                    alert('No account found with this email. Please sign up first.');
+                    return;
+                }
+                
+                // In production, verify password hash here
+                // For now, we accept any password for demo purposes
+                
+                // Check if account is locked
+                if (user.locked) {
+                    hideLoading();
+                    alert('Your account has been locked. Please contact the administrator.');
+                    return;
+                }
+                
+                // Check subscription status for students
+                if (user.role === 'student' && user.status === 'expired') {
+                    hideLoading();
+                    alert('Your subscription has expired. Please renew to continue.');
+                    return;
+                }
+                
+                // Store user session data with complete user object
+                const userSession = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    isLoggedIn: true,
+                    loginTime: new Date().toISOString()
+                };
+                localStorage.setItem('currentUser', JSON.stringify(userSession));
+                sessionStorage.setItem('userData', JSON.stringify(userSession));
+                
+                // Redirect based on user role
+                if (user.role === 'student') {
+                    // Store student ID for dashboard
+                    localStorage.setItem('brainwave_current_student_id', user.id);
+                    window.location.href = 'student-dashboard.html';
+                } else if (user.role === 'parent') {
+                    // Store current user and redirect to parent dashboard
+                    window.location.href = 'parent-dashboard.html';
+                } else {
+                    // Default to admin dashboard
+                    window.location.href = 'admin-dashboard.html';
+                }
+            }, 1000);
+        });
+
+        // Loading functions
+        function showLoading() {
+            const submitBtn = document.querySelector('.login-btn');
+            submitBtn.textContent = 'Signing In...';
+            submitBtn.disabled = true;
+        }
+
+        function hideLoading() {
+            const submitBtn = document.querySelector('.login-btn');
+            submitBtn.textContent = 'Log In';
+            submitBtn.disabled = false;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Brainwave</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .input-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .toggle-password:hover {
+            opacity: 1;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-fill.weak {
+            width: 33%;
+            background: #ef4444;
+        }
+
+        .strength-fill.medium {
+            width: 66%;
+            background: #f59e0b;
+        }
+
+        .strength-fill.strong {
+            width: 100%;
+            background: #10b981;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .strength-text.weak {
+            color: #ef4444;
+        }
+
+        .strength-text.medium {
+            color: #f59e0b;
+        }
+
+        .strength-text.strong {
+            color: #10b981;
+        }
+
+        .password-requirements {
+            margin-top: 10px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .requirement {
+            font-size: 12px;
+            color: #6b7280;
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .requirement.valid {
+            color: #10b981;
+        }
+
+        .req-icon {
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .requirement.valid .req-icon {
+            color: #10b981;
+        }
+
+        .requirement.valid .req-icon::before {
+            content: '✓';
+        }
+
+        .password-match {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .password-match.match {
+            color: #10b981;
+        }
+
+        .password-match.no-match {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="auth-logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="logo-img">
+                        <rect x="0" y="0" width="40" height="40" rx="8" ry="8" fill="#fbbf24"/>
+                        <text x="20" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1e3a8a">B</text>
+                    </svg>
+                    <h1>BrainWave</h1>
+                </div>
+                <p>Create your account to start learning.</p>
+            </div>
+            
+            <form class="login-form" id="signupForm">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label>I am a:</label>
+                    <div class="role-selection">
+                        <label class="role-option">
+                            <input type="radio" name="userRole" value="student" checked>
+                            <span>Student</span>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="userRole" value="parent">
+                            <span>Parent</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Name Fields -->
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="toggle-password" id="togglePassword">👁️</i>
+                    </div>
+                    <div class="password-strength" id="passwordStrength" style="display: none;">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText"></span>
+                    </div>
+                    <div class="password-requirements" id="passwordRequirements" style="display: none;">
+                        <div class="requirement" id="req-length">
+                            <span class="req-icon">○</span> At least 8 characters
+                        </div>
+                        <div class="requirement" id="req-uppercase">
+                            <span class="req-icon">○</span> One uppercase letter
+                        </div>
+                        <div class="requirement" id="req-lowercase">
+                            <span class="req-icon">○</span> One lowercase letter
+                        </div>
+                        <div class="requirement" id="req-number">
+                            <span class="req-icon">○</span> One number
+                        </div>
+                        <div class="requirement" id="req-special">
+                            <span class="req-icon">○</span> One special character
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                        <i class="toggle-password" id="toggleConfirmPassword">👁️</i>
+                    </div>
+                    <div class="password-match" id="passwordMatch" style="display: none;"></div>
+                </div>
+
+                <!-- Student Fields -->
+                <div class="student-fields" id="studentFields">
+                    <div class="form-group">
+                        <label for="level">Academic Level:</label>
+                        <select id="level" name="level" required>
+                            <option value="">Select your level</option>
+                            <option value="SS1">SS1</option>
+                            <option value="SS2">SS2</option>
+                            <option value="SS3">SS3</option>
+                            <option value="Jambite">Jambite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="stream">Stream:</label>
+                        <select id="stream" name="stream" required>
+                            <option value="">Select your stream</option>
+                            <option value="Science">Science</option>
+                            <option value="Arts">Arts</option>
+                            <option value="Commercial">Commercial</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">Create Account</button>
+
+                <!-- Terms and Conditions -->
+                <div class="form-group" style="margin-top: 20px;">
+                    <div style="display: flex; align-items: start; gap: 10px; padding: 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <input type="checkbox" id="terms" name="terms" style="margin-top: 4px; width: 18px; height: 18px; cursor: pointer;" required>
+                        <label for="terms" style="margin: 0; font-size: 14px; cursor: pointer; color: #374151; line-height: 1.5; font-weight: 500;">
+                            I agree to the <a href="terms-of-service.html" target="_blank" style="color: #1e3a8a; text-decoration: none; font-weight: 600;">Terms of Service</a> and <a href="privacy-policy.html" target="_blank" style="color: #1e3a8a; text-decoration: none; font-weight: 600;">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <span style="color: #ef4444; font-size: 12px; margin-top: 6px; display: none;" id="termsError">You must agree to the terms and conditions to continue</span>
+                </div>
+            </form>
+            
+            <div class="login-footer">
+                <p>Already have an account? <a href="login.html">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            if (password.type === 'password') {
+                password.type = 'text';
+                this.textContent = '🙈';
+            } else {
+                password.type = 'password';
+                this.textContent = '👁️';
+            }
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (confirmPassword.type === 'password') {
+                confirmPassword.type = 'text';
+                this.textContent = '🙈';
+            } else {
+                confirmPassword.type = 'password';
+                this.textContent = '👁️';
+            }
+        });
+
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthIndicator = document.getElementById('passwordStrength');
+            const requirementsBox = document.getElementById('passwordRequirements');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
+            if (password.length > 0) {
+                strengthIndicator.style.display = 'block';
+                requirementsBox.style.display = 'block';
+                
+                // Check requirements
+                const hasLength = password.length >= 8;
+                const hasUppercase = /[A-Z]/.test(password);
+                const hasLowercase = /[a-z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+                // Update requirement indicators
+                updateRequirement('req-length', hasLength);
+                updateRequirement('req-uppercase', hasUppercase);
+                updateRequirement('req-lowercase', hasLowercase);
+                updateRequirement('req-number', hasNumber);
+                updateRequirement('req-special', hasSpecial);
+
+                // Calculate strength
+                let strength = 0;
+                if (hasLength) strength++;
+                if (hasUppercase) strength++;
+                if (hasLowercase) strength++;
+                if (hasNumber) strength++;
+                if (hasSpecial) strength++;
+
+                strengthFill.className = 'strength-fill';
+                strengthText.className = 'strength-text';
+
+                if (strength <= 2) {
+                    strengthFill.classList.add('weak');
+                    strengthText.classList.add('weak');
+                    strengthText.textContent = '⚠️ Weak password';
+                } else if (strength <= 4) {
+                    strengthFill.classList.add('medium');
+                    strengthText.classList.add('medium');
+                    strengthText.textContent = '🛡️ Medium strength';
+                } else {
+                    strengthFill.classList.add('strong');
+                    strengthText.classList.add('strong');
+                    strengthText.textContent = '✓ Strong password';
+                }
+            } else {
+                strengthIndicator.style.display = 'none';
+                requirementsBox.style.display = 'none';
+            }
+        });
+
+        function updateRequirement(id, isValid) {
+            const element = document.getElementById(id);
+            if (isValid) {
+                element.classList.add('valid');
+            } else {
+                element.classList.remove('valid');
+            }
+        }
+
+        // Confirm password matching
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const matchIndicator = document.getElementById('passwordMatch');
+
+            if (confirmPassword.length > 0) {
+                matchIndicator.style.display = 'block';
+                if (password === confirmPassword) {
+                    matchIndicator.className = 'password-match match';
+                    matchIndicator.textContent = '✓ Passwords match';
+                } else {
+                    matchIndicator.className = 'password-match no-match';
+                    matchIndicator.textContent = '✗ Passwords do not match';
+                }
+            } else {
+                matchIndicator.style.display = 'none';
+            }
+        });
+
+        // Real-time terms checkbox validation
+        document.getElementById('terms').addEventListener('change', function() {
+            const termsError = document.getElementById('termsError');
+            if (this.checked) {
+                termsError.style.display = 'none';
+                this.parentElement.style.borderColor = '#e5e7eb';
+            }
+        });
+
+        // Handle role toggle
+        const roleInputs = document.querySelectorAll('input[name="userRole"]');
+        const studentFields = document.getElementById('studentFields');
+        const levelField = document.getElementById('level');
+        const streamField = document.getElementById('stream');
+        
+        roleInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'student') {
+                    studentFields.style.display = 'block';
+                    levelField.required = true;
+                    streamField.required = true;
+                } else {
+                    studentFields.style.display = 'none';
+                    levelField.required = false;
+                    streamField.required = false;
+                    levelField.value = '';
+                    streamField.value = '';
+                }
+            });
+        });
+        
+        // Function to generate mock data for new students
+        function generateStudentMockData(studentData) {
+            console.log('📚 Creating comprehensive mock data for:', studentData.name);
+            
+            const now = new Date();
+            const futureDate = new Date(now);
+            futureDate.setDate(futureDate.getDate() + 7);
+            const nextWeek = new Date(now);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            const twoWeeks = new Date(now);
+            twoWeeks.setDate(twoWeeks.getDate() + 14);
+            
+            // Generate quizzes and assignments
+            const quizzes = [
+                {
+                    id: 'quiz_' + studentData.id + '_1',
+                    type: 'quiz',
+                    title: 'Quadratic Equations Quiz',
+                    subject: 'Mathematics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: futureDate.toISOString(),
+                    duration: '30',
+                    totalMarks: 50,
+                    questions: 15,
+                    status: 'available',
+                    description: 'Test your understanding of quadratic equations and their solutions',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'quiz_' + studentData.id + '_2',
+                    type: 'quiz',
+                    title: 'Chemical Reactions Quiz',
+                    subject: 'Chemistry',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: futureDate.toISOString(),
+                    duration: '25',
+                    totalMarks: 40,
+                    questions: 12,
+                    status: 'available',
+                    description: 'Identify different types of chemical reactions and balance equations',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'quiz_' + studentData.id + '_3',
+                    type: 'quiz',
+                    title: 'Physics Mechanics Quiz',
+                    subject: 'Physics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: nextWeek.toISOString(),
+                    duration: '35',
+                    totalMarks: 60,
+                    questions: 18,
+                    status: 'available',
+                    description: 'Newton\'s laws, motion, and forces in physics',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'assignment_' + studentData.id + '_1',
+                    type: 'assignment',
+                    title: 'Newton\'s Laws Assignment',
+                    subject: 'Physics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: futureDate.toISOString(),
+                    duration: '45',
+                    totalMarks: 100,
+                    status: 'available',
+                    description: 'Solve problems involving Newton\'s three laws of motion',
+                    instructions: 'Complete all 5 problems and show your work clearly',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'assignment_' + studentData.id + '_2',
+                    type: 'assignment',
+                    title: 'Cell Biology Assignment',
+                    subject: 'Biology',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: futureDate.toISOString(),
+                    duration: '40',
+                    totalMarks: 80,
+                    status: 'available',
+                    description: 'Research and explain cellular processes',
+                    instructions: 'Write a 1000-word essay on cell division',
+                    createdAt: now.toISOString()
+                }
+            ];
+            
+            // Generate mock exams
+            const mockExams = [
+                {
+                    id: 'mock_' + studentData.id + '_1',
+                    type: 'mock',
+                    title: 'WAEC Mathematics Mock Exam',
+                    subject: 'Mathematics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: futureDate.toISOString(),
+                    duration: '120',
+                    totalMarks: 100,
+                    questions: 50,
+                    status: 'available',
+                    description: 'Comprehensive WAEC Mathematics practice test',
+                    examType: 'WAEC',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'mock_' + studentData.id + '_2',
+                    type: 'mock',
+                    title: 'JAMB Physics Practice Test',
+                    subject: 'Physics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    dueDate: futureDate.toISOString(),
+                    duration: '90',
+                    totalMarks: 100,
+                    questions: 40,
+                    status: 'available',
+                    description: 'JAMB Physics mock examination',
+                    examType: 'JAMB',
+                    createdAt: now.toISOString()
+                }
+            ];
+            
+            // Generate live classes
+            const liveClasses = [
+                {
+                    id: 'live_' + studentData.id + '_1',
+                    subject: 'Mathematics',
+                    teacher: 'Dr. Sarah Johnson',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    date: now.toISOString(),
+                    time: '10:00 AM',
+                    status: 'live',
+                    link: 'https://meet.google.com/sample-math-class',
+                    topic: 'Calculus Integration Techniques',
+                    duration: '60 minutes',
+                    attendees: 45,
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'live_' + studentData.id + '_2',
+                    subject: 'Physics',
+                    teacher: 'Prof. Michael Brown',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    date: futureDate.toISOString(),
+                    time: '2:00 PM',
+                    status: 'scheduled',
+                    link: 'https://meet.google.com/sample-physics-class',
+                    topic: 'Newton\'s Laws of Motion',
+                    duration: '45 minutes',
+                    attendees: 0,
+                    createdAt: now.toISOString()
+                }
+            ];
+            
+            // Generate study materials
+            const books = [
+                {
+                    id: 'book_' + studentData.id + '_1',
+                    title: 'Advanced Mathematics for SS Students',
+                    subject: 'Mathematics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    type: 'textbook',
+                    format: 'PDF',
+                    pages: 450,
+                    size: '12.5 MB',
+                    downloadUrl: '#',
+                    description: 'Comprehensive mathematics textbook covering all SS topics',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'book_' + studentData.id + '_2',
+                    title: 'Physics Fundamentals',
+                    subject: 'Physics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    type: 'textbook',
+                    format: 'PDF',
+                    pages: 380,
+                    size: '9.8 MB',
+                    downloadUrl: '#',
+                    description: 'Essential physics concepts and problem-solving techniques',
+                    createdAt: now.toISOString()
+                }
+            ];
+            
+            const videos = [
+                {
+                    id: 'video_' + studentData.id + '_1',
+                    title: 'WAEC Mathematics Tutorial',
+                    subject: 'Mathematics',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    type: 'video',
+                    duration: '45:30',
+                    views: 1250,
+                    thumbnail: 'https://img.youtube.com/vi/sample-math/hqdefault.jpg',
+                    videoUrl: 'https://youtube.com/watch?v=sample-math',
+                    description: 'Complete WAEC mathematics preparation tutorial',
+                    createdAt: now.toISOString()
+                },
+                {
+                    id: 'video_' + studentData.id + '_2',
+                    title: 'Chemistry Lab Techniques',
+                    subject: 'Chemistry',
+                    classLevel: studentData.classLevel,
+                    stream: studentData.stream,
+                    type: 'video',
+                    duration: '32:15',
+                    views: 890,
+                    thumbnail: 'https://img.youtube.com/vi/sample-chem/hqdefault.jpg',
+                    videoUrl: 'https://youtube.com/watch?v=sample-chem',
+                    description: 'Essential chemistry laboratory techniques and safety',
+                    createdAt: now.toISOString()
+                }
+            ];
+            
+            // Save all mock data to localStorage
+            localStorage.setItem('brainwave_quizs', JSON.stringify(quizzes));
+            localStorage.setItem('brainwave_mocks', JSON.stringify(mockExams));
+            localStorage.setItem('brainwave_live_classes', JSON.stringify(liveClasses));
+            localStorage.setItem('brainwave_books', JSON.stringify(books));
+            localStorage.setItem('brainwave_videos', JSON.stringify(videos));
+            
+            console.log('✅ Mock data generated successfully:');
+            console.log('- Quizzes & Assignments:', quizzes.length);
+            console.log('- Mock Exams:', mockExams.length);
+            console.log('- Live Classes:', liveClasses.length);
+            console.log('- Books:', books.length);
+            console.log('- Videos:', videos.length);
+        }
+        
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const selectedRole = document.querySelector('input[name="userRole"]:checked').value;
+            const termsCheckbox = document.getElementById('terms');
+            const termsError = document.getElementById('termsError');
+            
+            // Validate required fields
+            if (!firstName || !lastName || !email || !password) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long');
+                return;
+            }
+            
+            // Validate terms and conditions
+            if (!termsCheckbox.checked) {
+                termsError.style.display = 'block';
+                termsCheckbox.parentElement.style.borderColor = '#ef4444';
+                alert('Please agree to the Terms of Service and Privacy Policy to continue');
+                return;
+            } else {
+                termsError.style.display = 'none';
+                termsCheckbox.parentElement.style.borderColor = '#e5e7eb';
+            }
+            
+            // Validate student-specific fields
+            if (selectedRole === 'student') {
+                const level = document.getElementById('level').value;
+                const stream = document.getElementById('stream').value;
+                
+                if (!level || !stream) {
+                    alert('Please select your academic level and stream');
+                    return;
+                }
+            }
+            
+            const submitBtn = document.querySelector('.login-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+            
+            // Generate unique student code
+            function generateStudentCode() {
+                const prefix = 'BW';
+                const timestamp = Date.now().toString().slice(-6);
+                const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+                return `${prefix}-${timestamp}-${random}`;
+            }
+            
+            // Create user data
+            const level = selectedRole === 'student' ? document.getElementById('level').value : '';
+            const stream = selectedRole === 'student' ? document.getElementById('stream').value : '';
+            
+            const userData = {
+                id: Date.now(),
+                name: `${firstName} ${lastName}`,
+                email: email,
+                role: selectedRole,
+                plan: 'bootcamp',
+                status: 'bootcamp',
+                expiry: null,
+                locked: false,
+                joinDate: new Date().toISOString().split('T')[0],
+                bootcampStartDate: new Date().toISOString().split('T')[0],
+                planHistory: [{
+                    from: null,
+                    to: 'bootcamp',
+                    changedAt: new Date().toISOString(),
+                    changedBy: 'user_signup'
+                }],
+                // Additional user info
+                userType: selectedRole === 'student' ? 'child' : 'parent',
+                classLevel: level,
+                stream: stream,
+                phone: '',
+                // Student-specific
+                studentCode: selectedRole === 'student' ? generateStudentCode() : null,
+                parentId: null,
+                // Parent-specific
+                childrenCount: selectedRole === 'parent' ? 0 : undefined,
+                children: selectedRole === 'parent' ? [] : undefined,
+                needsChildLinking: selectedRole === 'parent' ? true : false
+            };
+            
+            // Save to localStorage for admin dashboard
+            let users = JSON.parse(localStorage.getItem('brainwave_users')) || [];
+            users.push(userData);
+            localStorage.setItem('brainwave_users', JSON.stringify(users));
+            
+            // Also save to 'users' key for backward compatibility
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            console.log('New user saved to localStorage:', userData);
+            console.log('Total users now:', users.length);
+            
+            // Save user session
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            
+            // Store email and role for confirmation page
+            localStorage.setItem('pendingUserEmail', userData.email);
+            localStorage.setItem('pendingUserRole', userData.role);
+            
+            // Store student code if student
+            if (selectedRole === 'student') {
+                localStorage.setItem('brainwave_current_student_id', userData.id);
+                localStorage.setItem('pendingStudentCode', userData.studentCode);
+                
+                // Generate mock data for the new student
+                console.log('🎓 Generating mock data for new student...');
+                generateStudentMockData(userData);
+            }
+            
+            console.log('✅ User data saved, preparing to redirect...');
+            console.log('Pending email:', userData.email);
+            console.log('Pending role:', userData.role);
+            
+            // Update button to show success
+            submitBtn.textContent = '✓ Account Created! Redirecting...';
+            submitBtn.style.background = '#10b981';
+            
+            // Show student code message for students (store for later display)
+            if (selectedRole === 'student') {
+                console.log('🎓 Student Code:', userData.studentCode);
+            }
+            
+            console.log('🔄 Redirecting to email-confirmation.html...');
+            
+            // Redirect to email confirmation page immediately
+            setTimeout(() => {
+                window.location.href = 'email-confirmation.html?v=' + Date.now();
+            }, 1500);
+        });
+        
+        // Password validation
+        const password = document.getElementById('password');
+        
+        function validatePassword() {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity("Passwords don't match");
+            } else {
+                confirmPassword.setCustomValidity('');
+            }
+        }
+        
+        password.addEventListener('change', validatePassword);
+        confirmPassword.addEventListener('keyup', validatePassword);
+    </script>
+</body>
+</html>
