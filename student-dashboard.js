@@ -686,12 +686,12 @@ function checkAuthentication() {
     }
     
     // Load student data
-    const users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+    let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
     console.log('👥 Users in storage:', users.length);
     
-    currentStudent = users.find(u => u.id == studentId);
+    const userIndex = users.findIndex(u => u.id == studentId);
     
-    if (!currentStudent) {
+    if (userIndex === -1) {
         console.error('❌ Student not found with ID:', studentId);
         console.log('Available user IDs:', users.map(u => u.id));
         localStorage.removeItem('brainwave_current_student_id');
@@ -699,18 +699,51 @@ function checkAuthentication() {
         return;
     }
     
+    currentStudent = users[userIndex];
+    
     console.log('✅ Student authenticated:', {
         name: currentStudent.name,
         email: currentStudent.email,
         studentCode: currentStudent.studentCode,
         classLevel: currentStudent.classLevel,
         stream: currentStudent.stream,
-        gender: currentStudent.gender
+        gender: currentStudent.gender,
+        expiry: currentStudent.expiry || currentStudent.expiryDate
     });
     
+    // Check and auto-lock expired accounts
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (currentStudent.expiry || currentStudent.expiryDate) {
+        const expiryDate = new Date(currentStudent.expiry || currentStudent.expiryDate);
+        expiryDate.setHours(0, 0, 0, 0);
+        
+        // If expiry date has passed, automatically lock the account
+        if (expiryDate < today && !currentStudent.locked) {
+            currentStudent.locked = true;
+            currentStudent.accountLocked = true;
+            currentStudent.status = 'expired';
+            currentStudent.lockedReason = 'Subscription expired';
+            currentStudent.lockedAt = new Date().toISOString();
+            
+            // Update in storage
+            users[userIndex] = currentStudent;
+            localStorage.setItem('brainwave_users', JSON.stringify(users));
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            console.log(`🔒 Account auto-locked: ${currentStudent.email} (Expired: ${currentStudent.expiry || currentStudent.expiryDate})`);
+            
+            alert('Your subscription has expired and your account has been locked. Please contact the administrator or renew your subscription.');
+            logout();
+            return;
+        }
+    }
+    
     // Check if account is locked
-    if (currentStudent.locked) {
-        alert('Your account has been locked. Please contact the administrator.');
+    if (currentStudent.locked || currentStudent.accountLocked) {
+        const reason = currentStudent.lockedReason || 'Your account has been locked';
+        alert(`${reason}. Please contact the administrator.`);
         logout();
         return;
     }

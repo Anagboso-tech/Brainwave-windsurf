@@ -878,6 +878,8 @@
 
         // Initialize dashboard with mock data
         window.addEventListener('DOMContentLoaded', function() {
+            // Check for real parent login first
+            checkParentAuthentication();
             generateMockParentData();
             updateWelcomeSection();
             loadChildren();
@@ -885,6 +887,59 @@
                 switchToChild(children[0]);
             }
         });
+        
+        // Check parent authentication and expiry
+        function checkParentAuthentication() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (currentUser.email && currentUser.role === 'parent') {
+                // Check and auto-lock expired parent accounts
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const parentIndex = users.findIndex(u => u.email === currentUser.email && u.role === 'parent');
+                
+                if (parentIndex !== -1) {
+                    const parentUser = users[parentIndex];
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (parentUser.expiry || parentUser.expiryDate) {
+                        const expiryDate = new Date(parentUser.expiry || parentUser.expiryDate);
+                        expiryDate.setHours(0, 0, 0, 0);
+                        
+                        // If expiry date has passed, automatically lock the account
+                        if (expiryDate < today && !parentUser.locked) {
+                            parentUser.locked = true;
+                            parentUser.accountLocked = true;
+                            parentUser.status = 'expired';
+                            parentUser.lockedReason = 'Subscription expired';
+                            parentUser.lockedAt = new Date().toISOString();
+                            
+                            // Update in storage
+                            users[parentIndex] = parentUser;
+                            localStorage.setItem('brainwave_users', JSON.stringify(users));
+                            localStorage.setItem('users', JSON.stringify(users));
+                            
+                            console.log(`🔒 Parent account auto-locked: ${parentUser.email} (Expired: ${parentUser.expiry || parentUser.expiryDate})`);
+                            
+                            alert('Your subscription has expired and your account has been locked. Please contact the administrator or renew your subscription.');
+                            window.location.href = 'login.html';
+                            return;
+                        }
+                    }
+                    
+                    // Check if account is locked
+                    if (parentUser.locked || parentUser.accountLocked) {
+                        const reason = parentUser.lockedReason || 'Your account has been locked';
+                        alert(`${reason}. Please contact the administrator.`);
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    // Update currentParent with full data
+                    currentParent = parentUser;
+                }
+            }
+        }
 
         // Update welcome section
         function updateWelcomeSection() {
@@ -1047,26 +1102,42 @@
                 return { text: 'LOCKED', class: 'status-locked' };
             }
             
-            if (child.status === 'bootcamp' || child.plan === 'bootcamp') {
-                const startDate = new Date(child.bootcampStartDate);
-                const today = new Date();
-                const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Check payment status first (set by admin via subscription management)
+            if (child.paymentStatus === 'paid' || child.isPaid === true) {
+                // Paid members are always active unless account is locked
+                return { text: 'ACTIVE - PAID', class: 'status-active' };
+            }
+            
+            // Check if on bootcamp (free trial)
+            if (child.paymentStatus === 'bootcamp' || child.status === 'bootcamp' || child.plan === 'bootcamp') {
+                if (child.bootcampStartDate) {
+                    const startDate = new Date(child.bootcampStartDate);
+                    startDate.setHours(0, 0, 0, 0);
+                    const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                    
+                    if (daysPassed >= 7) {
+                        return { text: 'EXPIRED', class: 'status-expired' };
+                    }
+                    return { text: 'ACTIVE - BOOTCAMP', class: 'status-active' };
+                }
+                return { text: 'ACTIVE - BOOTCAMP', class: 'status-active' };
+            }
+            
+            // Check expiry date for time-based subscriptions
+            if (child.expiryDate || child.expiry) {
+                const expiryDate = new Date(child.expiryDate || child.expiry);
+                expiryDate.setHours(0, 0, 0, 0);
                 
-                if (daysPassed >= 7) {
+                if (expiryDate < today) {
                     return { text: 'EXPIRED', class: 'status-expired' };
                 }
                 return { text: 'ACTIVE', class: 'status-active' };
             }
             
-            if (child.expiryDate) {
-                const expiry = new Date(child.expiryDate);
-                const today = new Date();
-                
-                if (expiry < today) {
-                    return { text: 'EXPIRED', class: 'status-expired' };
-                }
-            }
-            
+            // Default to active if no specific status found
             return { text: 'ACTIVE', class: 'status-active' };
         }
 

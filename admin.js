@@ -2088,16 +2088,19 @@ class AdminDashboard {
         // Quiz filters
         document.getElementById('quiz-search')?.addEventListener('input', () => this.filterQuizzes());
         document.getElementById('quiz-class-filter')?.addEventListener('change', () => this.filterQuizzes());
+        document.getElementById('quiz-stream-filter')?.addEventListener('change', () => this.filterQuizzes());
         document.getElementById('quiz-subject-filter')?.addEventListener('change', () => this.filterQuizzes());
 
         // Assignment filters
         document.getElementById('assignment-search')?.addEventListener('input', () => this.filterAssignments());
         document.getElementById('assignment-class-filter')?.addEventListener('change', () => this.filterAssignments());
+        document.getElementById('assignment-stream-filter')?.addEventListener('change', () => this.filterAssignments());
         document.getElementById('assignment-subject-filter')?.addEventListener('change', () => this.filterAssignments());
 
         // Exam filters
         document.getElementById('exam-search')?.addEventListener('input', () => this.filterExams());
         document.getElementById('exam-class-filter')?.addEventListener('change', () => this.filterExams());
+        document.getElementById('exam-stream-filter')?.addEventListener('change', () => this.filterExams());
         document.getElementById('exam-subject-filter')?.addEventListener('change', () => this.filterExams());
     }
 
@@ -2512,7 +2515,7 @@ class AdminDashboard {
         // Build the content HTML
         let html = `
             <div style="background: var(--gray-50); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
                     <div>
                         <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Type</strong>
                         <span style="color: var(--text-primary); font-size: 1rem;">${typeNames[type]}</span>
@@ -2520,6 +2523,10 @@ class AdminDashboard {
                     <div>
                         <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Class Level</strong>
                         <span style="background: var(--primary-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; font-weight: 600;">${assessment.classLevel}</span>
+                    </div>
+                    <div>
+                        <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Stream</strong>
+                        ${assessment.stream ? `<span style="background: var(--secondary-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.875rem; font-weight: 600;">${assessment.stream}</span>` : '<span style="color: var(--text-secondary); font-size: 0.875rem;">Not specified</span>'}
                     </div>
                     <div>
                         <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Subject</strong>
@@ -2538,6 +2545,7 @@ class AdminDashboard {
                         <span style="color: var(--text-primary); font-size: 1rem;"><i class="fas fa-question-circle"></i> ${assessment.questions.length} questions</span>
                     </div>
                 </div>
+                ${this.renderDueDateInfoForModal(assessment)}
                 ${assessment.description ? `
                     <div>
                         <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Description</strong>
@@ -2699,7 +2707,7 @@ class AdminDashboard {
         const { icon, color } = icons[type];
 
         return `
-            <div class="assessment-card" data-id="${assessment.id}" data-class="${assessment.classLevel}" data-subject="${assessment.subject}" style="background: var(--white); border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: all 0.2s ease;">
+            <div class="assessment-card" data-id="${assessment.id}" data-class="${assessment.classLevel}" data-stream="${assessment.stream || ''}" data-subject="${assessment.subject}" style="background: var(--white); border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: all 0.2s ease;">
                 <div style="padding: 1rem; background: var(--gray-50); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.75rem;">
                     <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, ${color}, ${color}dd); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
                         <i class="fas fa-${icon}"></i>
@@ -2709,6 +2717,7 @@ class AdminDashboard {
                 <div style="padding: 1rem;">
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
                         <span style="background: var(--primary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600;">${assessment.classLevel}</span>
+                        ${assessment.stream ? `<span style="background: var(--secondary-color); color: white; padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600;">${assessment.stream}</span>` : ''}
                         <span style="background: var(--gray-100); color: var(--gray-700); padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600;">${assessment.subject}</span>
                         <span style="background: var(--gray-100); color: var(--gray-700); padding: 0.25rem 0.5rem; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 600;">${assessment.questions.length} Questions</span>
                     </div>
@@ -2717,6 +2726,7 @@ class AdminDashboard {
                         <div><i class="fas fa-clock"></i> ${assessment.duration} min</div>
                         <div><i class="fas fa-star"></i> ${assessment.totalMarks} marks</div>
                     </div>
+                    ${this.renderDueDateInfo(assessment)}
                     <div style="display: flex; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
                         <button onclick="window.adminDashboard.viewAssessment('${type}', ${assessment.id})" style="flex: 1; padding: 0.5rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem; background: var(--success-color); color: white; border: none; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-eye"></i> View
@@ -2733,44 +2743,210 @@ class AdminDashboard {
         `;
     }
 
+    renderDueDateInfo(assessment) {
+        // Handle assessments that might not have due date (backward compatibility)
+        if (!assessment.dueDate || !assessment.dueTime) {
+            return '<div style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.75rem;"><i class="fas fa-calendar-times"></i> No due date set</div>';
+        }
+
+        const dueDateTime = new Date(`${assessment.dueDate}T${assessment.dueTime}`);
+        const currentDateTime = new Date();
+        const isOverdue = dueDateTime < currentDateTime;
+        const timeDiff = dueDateTime.getTime() - currentDateTime.getTime();
+        
+        // Format the due date and time
+        const dueDateFormatted = new Date(assessment.dueDate).toLocaleDateString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        const dueTimeFormatted = assessment.dueTime;
+        
+        // Calculate time remaining or overdue
+        let timeStatus = '';
+        let statusColor = 'var(--text-secondary)';
+        
+        if (isOverdue) {
+            const overdueDays = Math.floor(Math.abs(timeDiff) / (1000 * 60 * 60 * 24));
+            const overdueHours = Math.floor((Math.abs(timeDiff) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            if (overdueDays > 0) {
+                timeStatus = `Overdue by ${overdueDays} day${overdueDays > 1 ? 's' : ''}`;
+            } else if (overdueHours > 0) {
+                timeStatus = `Overdue by ${overdueHours} hour${overdueHours > 1 ? 's' : ''}`;
+            } else {
+                timeStatus = 'Overdue';
+            }
+            statusColor = 'var(--danger-color)';
+        } else {
+            const remainingDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const remainingHours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            if (remainingDays > 0) {
+                timeStatus = `${remainingDays} day${remainingDays > 1 ? 's' : ''} remaining`;
+                statusColor = remainingDays <= 1 ? 'var(--warning-color)' : 'var(--success-color)';
+            } else if (remainingHours > 0) {
+                timeStatus = `${remainingHours} hour${remainingHours > 1 ? 's' : ''} remaining`;
+                statusColor = 'var(--warning-color)';
+            } else {
+                timeStatus = 'Due soon';
+                statusColor = 'var(--danger-color)';
+            }
+        }
+
+        return `
+            <div style="background: var(--gray-50); border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem; border-left: 4px solid ${statusColor};">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <i class="fas fa-calendar-alt" style="color: ${statusColor};"></i>
+                    <span style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Due: ${dueDateFormatted} at ${dueTimeFormatted}</span>
+                </div>
+                <div style="font-size: 0.75rem; color: ${statusColor}; font-weight: 600;">
+                    <i class="fas fa-clock"></i> ${timeStatus}
+                </div>
+            </div>
+        `;
+    }
+
+    renderDueDateInfoForModal(assessment) {
+        // Handle assessments that might not have due date (backward compatibility)
+        if (!assessment.dueDate || !assessment.dueTime) {
+            return `
+                <div style="margin-top: 1rem; padding: 1rem; background: var(--gray-100); border-radius: 8px; border-left: 4px solid var(--gray-400);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-calendar-times" style="color: var(--gray-500);"></i>
+                        <span style="font-weight: 600; color: var(--gray-700);">No due date set</span>
+                    </div>
+                    <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; color: var(--gray-600);">This assessment has no submission deadline.</p>
+                </div>
+            `;
+        }
+
+        const dueDateTime = new Date(`${assessment.dueDate}T${assessment.dueTime}`);
+        const currentDateTime = new Date();
+        const isOverdue = dueDateTime < currentDateTime;
+        const timeDiff = dueDateTime.getTime() - currentDateTime.getTime();
+        
+        // Format the due date and time
+        const dueDateFormatted = new Date(assessment.dueDate).toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const dueTimeFormatted = new Date(`${assessment.dueDate}T${assessment.dueTime}`).toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+        
+        // Calculate time remaining or overdue
+        let timeStatus = '';
+        let statusColor = 'var(--text-secondary)';
+        let statusIcon = 'fas fa-clock';
+        
+        if (isOverdue) {
+            const overdueDays = Math.floor(Math.abs(timeDiff) / (1000 * 60 * 60 * 24));
+            const overdueHours = Math.floor((Math.abs(timeDiff) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            if (overdueDays > 0) {
+                timeStatus = `Overdue by ${overdueDays} day${overdueDays > 1 ? 's' : ''}`;
+            } else if (overdueHours > 0) {
+                timeStatus = `Overdue by ${overdueHours} hour${overdueHours > 1 ? 's' : ''}`;
+            } else {
+                timeStatus = 'Overdue';
+            }
+            statusColor = 'var(--danger-color)';
+            statusIcon = 'fas fa-exclamation-triangle';
+        } else {
+            const remainingDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const remainingHours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            if (remainingDays > 0) {
+                timeStatus = `${remainingDays} day${remainingDays > 1 ? 's' : ''} remaining`;
+                statusColor = remainingDays <= 1 ? 'var(--warning-color)' : 'var(--success-color)';
+                statusIcon = remainingDays <= 1 ? 'fas fa-clock' : 'fas fa-check-circle';
+            } else if (remainingHours > 0) {
+                timeStatus = `${remainingHours} hour${remainingHours > 1 ? 's' : ''} remaining`;
+                statusColor = 'var(--warning-color)';
+                statusIcon = 'fas fa-clock';
+            } else {
+                timeStatus = 'Due very soon!';
+                statusColor = 'var(--danger-color)';
+                statusIcon = 'fas fa-exclamation-triangle';
+            }
+        }
+
+        return `
+            <div style="margin-top: 1rem; padding: 1.5rem; background: var(--white); border: 2px solid ${statusColor}; border-radius: 12px;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background: ${statusColor}; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i class="${statusIcon}" style="font-size: 1.25rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; color: var(--text-primary); font-size: 1.125rem;">Submission Deadline</h4>
+                        <p style="margin: 0; color: ${statusColor}; font-weight: 600; font-size: 0.875rem;">${timeStatus}</p>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 8px;">
+                    <div>
+                        <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Due Date</strong>
+                        <span style="color: var(--text-primary); font-size: 1rem;"><i class="fas fa-calendar-alt"></i> ${dueDateFormatted}</span>
+                    </div>
+                    <div>
+                        <strong style="color: var(--text-secondary); font-size: 0.875rem; display: block; margin-bottom: 0.25rem;">Due Time</strong>
+                        <span style="color: var(--text-primary); font-size: 1rem;"><i class="fas fa-clock"></i> ${dueTimeFormatted}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     filterQuizzes() {
         const searchTerm = document.getElementById('quiz-search')?.value.toLowerCase() || '';
         const classFilter = document.getElementById('quiz-class-filter')?.value || '';
+        const streamFilter = document.getElementById('quiz-stream-filter')?.value || '';
         const subjectFilter = document.getElementById('quiz-subject-filter')?.value || '';
 
         const cards = document.querySelectorAll('#quizzes-grid .assessment-card');
-        this.applyAssessmentFilter(cards, searchTerm, classFilter, subjectFilter);
+        this.applyAssessmentFilter(cards, searchTerm, classFilter, streamFilter, subjectFilter);
     }
 
     filterAssignments() {
         const searchTerm = document.getElementById('assignment-search')?.value.toLowerCase() || '';
         const classFilter = document.getElementById('assignment-class-filter')?.value || '';
+        const streamFilter = document.getElementById('assignment-stream-filter')?.value || '';
         const subjectFilter = document.getElementById('assignment-subject-filter')?.value || '';
 
         const cards = document.querySelectorAll('#assignments-grid .assessment-card');
-        this.applyAssessmentFilter(cards, searchTerm, classFilter, subjectFilter);
+        this.applyAssessmentFilter(cards, searchTerm, classFilter, streamFilter, subjectFilter);
     }
 
     filterExams() {
         const searchTerm = document.getElementById('exam-search')?.value.toLowerCase() || '';
         const classFilter = document.getElementById('exam-class-filter')?.value || '';
+        const streamFilter = document.getElementById('exam-stream-filter')?.value || '';
         const subjectFilter = document.getElementById('exam-subject-filter')?.value || '';
 
         const cards = document.querySelectorAll('#exams-grid .assessment-card');
-        this.applyAssessmentFilter(cards, searchTerm, classFilter, subjectFilter);
+        this.applyAssessmentFilter(cards, searchTerm, classFilter, streamFilter, subjectFilter);
     }
 
-    applyAssessmentFilter(cards, searchTerm, classFilter, subjectFilter) {
+    applyAssessmentFilter(cards, searchTerm, classFilter, streamFilter, subjectFilter) {
         cards.forEach(card => {
             const title = card.querySelector('[style*="font-weight: 700"]')?.textContent.toLowerCase() || '';
             const cardClass = card.dataset.class;
+            const cardStream = card.dataset.stream;
             const cardSubject = card.dataset.subject;
 
             const matchesSearch = title.includes(searchTerm);
             const matchesClass = !classFilter || cardClass === classFilter;
+            const matchesStream = !streamFilter || cardStream === streamFilter;
             const matchesSubject = !subjectFilter || cardSubject === subjectFilter;
 
-            card.style.display = (matchesSearch && matchesClass && matchesSubject) ? 'block' : 'none';
+            card.style.display = (matchesSearch && matchesClass && matchesStream && matchesSubject) ? 'block' : 'none';
         });
     }
 

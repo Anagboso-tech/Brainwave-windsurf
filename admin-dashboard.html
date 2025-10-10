@@ -2918,7 +2918,7 @@
                                 </div>
                                 
                                 <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
-                                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: end;">
+                                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; align-items: end;">
                                         <div>
                                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Search Quizzes</label>
                                             <div style="position: relative;">
@@ -2933,6 +2933,17 @@
                                                 <option value="SS1">SS1</option>
                                                 <option value="SS2">SS2</option>
                                                 <option value="SS3">SS3</option>
+                                                <option value="JAMB">JAMB</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Stream</label>
+                                            <select id="quiz-stream-filter" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white); cursor: pointer;">
+                                                <option value="">All Streams</option>
+                                                <option value="Science">Science</option>
+                                                <option value="Business">Business</option>
+                                                <option value="Humanities">Humanities</option>
+                                                <option value="General">General</option>
                                                 <option value="JAMB">JAMB</option>
                                             </select>
                                         </div>
@@ -2967,7 +2978,7 @@
                                 </div>
                                 
                                 <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
-                                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: end;">
+                                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; align-items: end;">
                                         <div>
                                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Search Assignments</label>
                                             <div style="position: relative;">
@@ -2982,6 +2993,17 @@
                                                 <option value="SS1">SS1</option>
                                                 <option value="SS2">SS2</option>
                                                 <option value="SS3">SS3</option>
+                                                <option value="JAMB">JAMB</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Stream</label>
+                                            <select id="assignment-stream-filter" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white); cursor: pointer;">
+                                                <option value="">All Streams</option>
+                                                <option value="Science">Science</option>
+                                                <option value="Business">Business</option>
+                                                <option value="Humanities">Humanities</option>
+                                                <option value="General">General</option>
                                                 <option value="JAMB">JAMB</option>
                                             </select>
                                         </div>
@@ -3016,7 +3038,7 @@
                                 </div>
                                 
                                 <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
-                                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 1rem; align-items: end;">
+                                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; align-items: end;">
                                         <div>
                                             <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Search Exams</label>
                                             <div style="position: relative;">
@@ -3031,6 +3053,17 @@
                                                 <option value="SS1">SS1</option>
                                                 <option value="SS2">SS2</option>
                                                 <option value="SS3">SS3</option>
+                                                <option value="JAMB">JAMB</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">Stream</label>
+                                            <select id="exam-stream-filter" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white); cursor: pointer;">
+                                                <option value="">All Streams</option>
+                                                <option value="Science">Science</option>
+                                                <option value="Business">Business</option>
+                                                <option value="Humanities">Humanities</option>
+                                                <option value="General">General</option>
                                                 <option value="JAMB">JAMB</option>
                                             </select>
                                         </div>
@@ -3474,6 +3507,7 @@
                                             <tr>
                                                 <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--border-color); font-weight: 600;">User Name</th>
                                                 <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--border-color); font-weight: 600;">Email</th>
+                                                <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Role</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Status</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Payment Status</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Plan</th>
@@ -3973,15 +4007,21 @@
                     <textarea id="assessment-description" rows="2" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; resize: vertical;"></textarea>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div>
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Class Level *</label>
-                        <select id="assessment-class" required onchange="updateAssessmentSubjects()" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                        <select id="assessment-class" required onchange="updateAssessmentStreams()" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
                             <option value="">Select Class</option>
                             <option value="SS1">SS1</option>
                             <option value="SS2">SS2</option>
                             <option value="SS3">SS3</option>
                             <option value="JAMB">JAMB</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Stream *</label>
+                        <select id="assessment-stream" required onchange="updateAssessmentSubjects()" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                            <option value="">Select Stream</option>
                         </select>
                     </div>
                     <div>
@@ -4011,6 +4051,24 @@
                     </select>
                     <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
                         <i class="fas fa-info-circle"></i> Bootcamp content is accessible to all students. Paid content requires payment.
+                    </p>
+                </div>
+
+                <!-- Due Date and Time Section -->
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Due Date & Time *</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.25rem; font-size: 0.875rem; color: var(--text-secondary);">Due Date</label>
+                            <input type="date" id="assessment-due-date" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.25rem; font-size: 0.875rem; color: var(--text-secondary);">Due Time</label>
+                            <input type="time" id="assessment-due-time" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem;">
+                        </div>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
+                        <i class="fas fa-clock"></i> Students must submit their work before this deadline. Late submissions may not be accepted.
                     </p>
                 </div>
 
@@ -4346,6 +4404,18 @@
                 </div>
                 
                 <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">User Role *</label>
+                    <select id="subscription-role" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                        <option value="">Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="parent">Parent</option>
+                    </select>
+                    <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+                        <i class="fas fa-info-circle"></i> Select whether this subscription is for a student or parent account.
+                    </small>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Subscription Plan *</label>
                     <select id="subscription-plan" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
                         <option value="">Select Plan</option>
@@ -4379,9 +4449,11 @@
                 </div>
                 
                 <div style="margin-bottom: 1rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Expiry Date</label>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Expiry Date (Optional)</label>
                     <input type="date" id="subscription-expiry" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem;">
-                    <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Leave empty for bootcamp users</small>
+                    <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+                        <i class="fas fa-magic"></i> Auto-calculated if left empty: Bootcamp = 7 days, Paid = No expiry, Time-based = Plan days. You can override by selecting a custom date.
+                    </small>
                 </div>
                 
                 <div style="margin-bottom: 1.5rem;">
@@ -5172,6 +5244,83 @@
                 
                 console.log('✅ Assessment subjects populated');
             }
+
+            // Function to update streams based on class level
+            function updateAssessmentStreams() {
+                const classSelect = document.getElementById('assessment-class');
+                const streamSelect = document.getElementById('assessment-stream');
+                const subjectSelect = document.getElementById('assessment-subject');
+                
+                if (!classSelect || !streamSelect || !subjectSelect) return;
+                
+                const selectedClass = classSelect.value;
+                
+                // Clear streams and subjects
+                streamSelect.innerHTML = '<option value="">Select Stream</option>';
+                subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+                
+                if (!selectedClass) return;
+                
+                // Define streams for each class level
+                const classStreams = {
+                    'SS1': ['Science', 'Business', 'Humanities', 'General'],
+                    'SS2': ['Science', 'Business', 'Humanities', 'General'],
+                    'SS3': ['Science', 'Business', 'Humanities', 'General'],
+                    'JAMB': ['JAMB', 'General']
+                };
+                
+                const streams = classStreams[selectedClass] || [];
+                
+                streams.forEach(stream => {
+                    const option = document.createElement('option');
+                    option.value = stream;
+                    option.textContent = stream;
+                    streamSelect.appendChild(option);
+                });
+                
+                console.log('✅ Assessment streams updated for class:', selectedClass);
+            }
+
+            // Function to update subjects based on stream selection
+            function updateAssessmentSubjects() {
+                const classSelect = document.getElementById('assessment-class');
+                const streamSelect = document.getElementById('assessment-stream');
+                const subjectSelect = document.getElementById('assessment-subject');
+                
+                if (!classSelect || !streamSelect || !subjectSelect) return;
+                
+                const selectedClass = classSelect.value;
+                const selectedStream = streamSelect.value;
+                
+                // Clear subjects
+                subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+                
+                if (!selectedClass || !selectedStream) return;
+                
+                // Define subjects for each stream
+                const streamSubjects = {
+                    'Science': ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Economics', 'English Language'],
+                    'Business': ['Mathematics', 'Economics', 'Commerce', 'Accounts', 'English Language', 'Government'],
+                    'Humanities': ['English Language', 'Literature-in-English', 'Government', 'Christian Religious Studies', 'Biology', 'Economics'],
+                    'General': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies'],
+                    'JAMB': ['Mathematics', 'English Language', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'Commerce', 'Accounts', 'Christian Religious Studies']
+                };
+                
+                const subjects = streamSubjects[selectedStream] || [];
+                
+                subjects.forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject;
+                    option.textContent = subject;
+                    subjectSelect.appendChild(option);
+                });
+                
+                console.log('✅ Assessment subjects updated for stream:', selectedStream);
+            }
+
+            // Make functions globally available
+            window.updateAssessmentStreams = updateAssessmentStreams;
+            window.updateAssessmentSubjects = updateAssessmentSubjects;
             
             // Setup assessment modal buttons
             function setupAssessmentButtons() {
@@ -5321,13 +5470,26 @@
             const title = document.getElementById('assessment-title').value;
             const description = document.getElementById('assessment-description').value;
             const classLevel = document.getElementById('assessment-class').value;
+            const stream = document.getElementById('assessment-stream').value;
             const subject = document.getElementById('assessment-subject').value;
             const duration = parseInt(document.getElementById('assessment-duration').value);
             const totalMarks = parseInt(document.getElementById('assessment-marks').value);
             const accessLevel = document.getElementById('assessment-access-level').value;
+            const dueDate = document.getElementById('assessment-due-date').value;
+            const dueTime = document.getElementById('assessment-due-time').value;
             
-            if (!title || !classLevel || !subject || !duration || !totalMarks) {
-                alert('Please fill in all required fields');
+            if (!title || !classLevel || !stream || !subject || !duration || !totalMarks || !dueDate || !dueTime) {
+                alert('Please fill in all required fields including stream, due date and time');
+                return;
+            }
+            
+            // Validate due date is in the future
+            const dueDateTimeString = `${dueDate}T${dueTime}`;
+            const dueDateTime = new Date(dueDateTimeString);
+            const currentDateTime = new Date();
+            
+            if (dueDateTime <= currentDateTime) {
+                alert('Due date and time must be in the future');
                 return;
             }
             
@@ -5348,11 +5510,15 @@
                 title,
                 description,
                 classLevel,
+                stream,
                 subject,
                 duration,
                 totalMarks,
                 questions,
                 accessLevel: accessLevel || 'bootcamp',
+                dueDate: dueDate,
+                dueTime: dueTime,
+                dueDateTimeISO: dueDateTime.toISOString(),
                 status: 'available',
                 createdAt: new Date().toISOString()
             };
@@ -6419,6 +6585,7 @@
                 
                 const email = document.getElementById('subscription-email').value;
                 const name = document.getElementById('subscription-name').value;
+                const role = document.getElementById('subscription-role').value;
                 const plan = document.getElementById('subscription-plan').value;
                 const planType = document.getElementById('subscription-plan-type').value;
                 const paymentStatus = document.getElementById('subscription-payment-status').value;
@@ -6426,27 +6593,40 @@
                 const locked = document.getElementById('subscription-locked').checked;
                 
                 // Validate required fields
-                if (!email || !name || !plan || !planType || !paymentStatus) {
+                if (!email || !name || !role || !plan || !planType || !paymentStatus) {
                     alert('Please fill in all required fields!');
                     return;
                 }
                 
-                // Calculate expiry date if not provided
+                // Calculate expiry date based on plan and payment status
                 let expiryDate = expiry;
-                if (!expiry && plan !== 'bootcamp') {
-                    const days = parseInt(plan);
-                    const date = new Date();
-                    date.setDate(date.getDate() + days);
-                    expiryDate = date.toISOString().split('T')[0];
-                }
                 
                 // Determine if user is paid
                 const isPaid = paymentStatus === 'paid';
+                
+                if (!expiry) {
+                    if (isPaid) {
+                        // Paid members: No expiry
+                        expiryDate = null;
+                    } else if (plan === 'bootcamp') {
+                        // Bootcamp: 7 days from now
+                        const date = new Date();
+                        date.setDate(date.getDate() + 7);
+                        expiryDate = date.toISOString().split('T')[0];
+                    } else {
+                        // Time-based plans: Calculate based on days
+                        const days = parseInt(plan);
+                        const date = new Date();
+                        date.setDate(date.getDate() + days);
+                        expiryDate = date.toISOString().split('T')[0];
+                    }
+                }
                 
                 const subscription = {
                     id: Date.now(),
                     email: email,
                     name: name,
+                    role: role,
                     plan: plan,
                     planType: planType,
                     status: plan === 'bootcamp' ? 'bootcamp' : 'active',
@@ -6454,7 +6634,9 @@
                     isPaid: isPaid,
                     paidDate: isPaid ? new Date().toISOString().split('T')[0] : null,
                     expiry: expiryDate,
+                    expiryDate: expiryDate,
                     locked: locked,
+                    accountLocked: locked,
                     joinDate: new Date().toISOString().split('T')[0],
                     bootcampStartDate: plan === 'bootcamp' ? new Date().toISOString().split('T')[0] : null,
                     planHistory: [{
@@ -6465,17 +6647,19 @@
                     }]
                 };
                 
-                // Save to localStorage
+                // Save to both localStorage locations
                 let users = JSON.parse(localStorage.getItem('users') || '[]');
                 users.push(subscription);
                 localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('brainwave_users', JSON.stringify(users));
                 
-                // Update table manually
+                // Update tables
                 updateUsersTable(users);
+                updateSubscriptionTable(users);
                 
                 // Close modal and show success
                 closeSubscriptionModal();
-                alert('Subscription added successfully!');
+                alert(`Subscription added successfully!\nExpiry date: ${expiryDate || 'No expiry (Paid member)'}`);
             }
         }
         
@@ -6509,6 +6693,7 @@
             const statusBadge = getStatusBadgeHTML(user);
             const bootcampInfo = getBootcampInfoHTML(user);
             const paymentStatusBadge = getPaymentStatusBadgeHTML(user);
+            const roleBadge = getRoleBadgeHTML(user);
             
             return `
                 <tr style="border-bottom: 1px solid var(--border-color);">
@@ -6519,6 +6704,7 @@
                         </div>
                     </td>
                     <td style="padding: 0.75rem; color: var(--text-secondary);">${user.email}</td>
+                    <td style="padding: 0.75rem; text-align: center;">${roleBadge}</td>
                     <td style="padding: 0.75rem; text-align: center;">${statusBadge}</td>
                     <td style="padding: 0.75rem; text-align: center;">
                         <select onchange="editUserPaymentStatus(${user.id}, this.value)" 
@@ -6546,12 +6732,7 @@
                         </select>
                     </td>
                     <td style="padding: 0.75rem; text-align: center;">
-                        ${user.plan === 'bootcamp' ? 
-                            '<span style="color: var(--text-secondary); font-size: 0.75rem;">N/A</span>' :
-                            `<input type="date" value="${user.expiry || ''}" 
-                                    onchange="editUserExpiry(${user.id}, this.value)"
-                                    style="padding: 0.25rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; width: 120px;">`
-                        }
+                        ${getExpiryDisplayHTML(user)}
                     </td>
                     <td style="padding: 0.75rem; text-align: center;">
                         <label class="toggle-switch">
@@ -6627,6 +6808,69 @@
             }
         }
         
+        function getRoleBadgeHTML(user) {
+            const role = user.role || 'student';
+            
+            if (role === 'student') {
+                return '<span style="background: #3b82f6; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;"><i class="fas fa-user-graduate"></i> Student</span>';
+            } else if (role === 'parent') {
+                return '<span style="background: #8b5cf6; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;"><i class="fas fa-users"></i> Parent</span>';
+            } else if (role === 'admin') {
+                return '<span style="background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;"><i class="fas fa-user-shield"></i> Admin</span>';
+            } else {
+                return '<span style="background: #6b7280; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;"><i class="fas fa-user"></i> User</span>';
+            }
+        }
+        
+        function getExpiryDisplayHTML(user) {
+            // Paid members have no expiry
+            if (user.paymentStatus === 'paid' || user.isPaid) {
+                return '<span style="color: #10b981; font-size: 0.75rem; font-weight: 600;"><i class="fas fa-infinity"></i> No Expiry (Paid)</span>';
+            }
+            
+            const expiryDate = user.expiry || user.expiryDate;
+            
+            if (!expiryDate) {
+                return '<span style="color: #ef4444; font-size: 0.75rem;">No expiry set</span>';
+            }
+            
+            // Calculate days remaining
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const expiry = new Date(expiryDate);
+            expiry.setHours(0, 0, 0, 0);
+            const daysRemaining = Math.floor((expiry - today) / (1000 * 60 * 60 * 24));
+            
+            let daysColor = '#10b981'; // green
+            let daysIcon = 'fa-check-circle';
+            
+            if (daysRemaining < 0) {
+                daysColor = '#ef4444'; // red
+                daysIcon = 'fa-times-circle';
+            } else if (daysRemaining <= 2) {
+                daysColor = '#ef4444'; // red
+                daysIcon = 'fa-exclamation-circle';
+            } else if (daysRemaining <= 7) {
+                daysColor = '#f59e0b'; // orange
+                daysIcon = 'fa-clock';
+            }
+            
+            const daysText = daysRemaining < 0 ? `Expired ${Math.abs(daysRemaining)} day${Math.abs(daysRemaining) !== 1 ? 's' : ''} ago` :
+                            daysRemaining === 0 ? 'Expires today' :
+                            `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} left`;
+            
+            return `
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.25rem;">
+                    <input type="date" value="${expiryDate}" 
+                           onchange="editUserExpiry(${user.id}, this.value)"
+                           style="padding: 0.25rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; width: 120px;">
+                    <span style="color: ${daysColor}; font-size: 0.65rem; font-weight: 600;">
+                        <i class="fas ${daysIcon}"></i> ${daysText}
+                    </span>
+                </div>
+            `;
+        }
+        
         // Global functions for table functionality
         function editUserPaymentStatus(userId, newPaymentStatus) {
             let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
@@ -6638,15 +6882,35 @@
                 user.isPaid = newPaymentStatus === 'paid';
                 user.paidDate = newPaymentStatus === 'paid' ? new Date().toISOString().split('T')[0] : null;
                 
+                // Automatically set expiry date based on payment status
+                if (newPaymentStatus === 'paid') {
+                    // Paid members: No expiry (set to null or far future)
+                    user.expiry = null;
+                    user.expiryDate = null;
+                    user.status = 'active';
+                    user.plan = user.plan === 'bootcamp' ? '365' : user.plan; // Upgrade from bootcamp to yearly
+                } else if (newPaymentStatus === 'bootcamp') {
+                    // Bootcamp: 7 days from now
+                    const bootcampExpiry = new Date();
+                    bootcampExpiry.setDate(bootcampExpiry.getDate() + 7);
+                    user.expiry = bootcampExpiry.toISOString().split('T')[0];
+                    user.expiryDate = bootcampExpiry.toISOString().split('T')[0];
+                    user.status = 'bootcamp';
+                    user.plan = 'bootcamp';
+                    user.bootcampStartDate = new Date().toISOString().split('T')[0];
+                }
+                
                 // Update in both storage locations
                 localStorage.setItem('brainwave_users', JSON.stringify(users));
                 localStorage.setItem('users', JSON.stringify(users));
                 
-                // Update table
-                updateUsersTable(users);
-                updateSubscriptionTable(users);
+                // Force reload users from storage to ensure fresh data
+                const updatedUsers = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                updateUsersTable(updatedUsers);
+                updateSubscriptionTable(updatedUsers);
                 
                 console.log(`✅ Payment status updated for user ${userId} to ${newPaymentStatus}`);
+                console.log(`✅ Expiry date set to: ${user.expiry || 'No expiry (Paid member)'}`);
             }
         }
         
@@ -6655,9 +6919,10 @@
                 window.adminDashboard.editUserPlan(userId, newPlan);
             } else {
                 // Fallback implementation
-                let users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
-                if (user) {
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const userIndex = users.findIndex(u => u.id == userId);
+                if (userIndex !== -1) {
+                    const user = users[userIndex];
                     const oldPlan = user.plan;
                     
                     // Track plan changes
@@ -6677,7 +6942,13 @@
                     // Update status and expiry based on plan
                     if (newPlan === 'bootcamp') {
                         user.status = 'bootcamp';
-                        user.expiry = null;
+                        user.paymentStatus = 'bootcamp';
+                        user.isPaid = false;
+                        // Set bootcamp expiry to 7 days from now
+                        const bootcampExpiry = new Date();
+                        bootcampExpiry.setDate(bootcampExpiry.getDate() + 7);
+                        user.expiry = bootcampExpiry.toISOString().split('T')[0];
+                        user.expiryDate = bootcampExpiry.toISOString().split('T')[0];
                         if (!user.bootcampStartDate) {
                             user.bootcampStartDate = new Date().toISOString().split('T')[0];
                         }
@@ -6687,12 +6958,27 @@
                         const date = new Date();
                         date.setDate(date.getDate() + days);
                         user.expiry = date.toISOString().split('T')[0];
+                        user.expiryDate = date.toISOString().split('T')[0];
                         user.bootcampStartDate = null;
                     }
                     
+                    // Update both storage locations
                     localStorage.setItem('users', JSON.stringify(users));
-                    updateUsersTable(users);
-                    alert(`Plan changed from ${oldPlan === 'bootcamp' ? '7-Day Bootcamp' : oldPlan + '-Day Plan'} to ${newPlan === 'bootcamp' ? '7-Day Bootcamp' : newPlan + '-Day Plan'}!`);
+                    localStorage.setItem('brainwave_users', JSON.stringify(users));
+                    
+                    // Force reload users from storage to ensure fresh data
+                    const updatedUsers = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                    updateUsersTable(updatedUsers);
+                    updateSubscriptionTable(updatedUsers);
+                    
+                    console.log(`✅ Plan changed for user ${userId}:`, {
+                        oldPlan: oldPlan,
+                        newPlan: newPlan,
+                        expiry: user.expiry,
+                        expiryDate: user.expiryDate
+                    });
+                    
+                    alert(`Plan changed from ${oldPlan === 'bootcamp' ? '7-Day Bootcamp' : oldPlan + '-Day Plan'} to ${newPlan === 'bootcamp' ? '7-Day Bootcamp' : newPlan + '-Day Plan'}!\nExpiry date: ${user.expiry}`);
                 }
             }
         }
@@ -6702,10 +6988,12 @@
                 window.adminDashboard.editUserExpiry(userId, newExpiry);
             } else {
                 // Fallback implementation
-                let users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
-                if (user) {
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const userIndex = users.findIndex(u => u.id == userId);
+                if (userIndex !== -1) {
+                    const user = users[userIndex];
                     user.expiry = newExpiry;
+                    user.expiryDate = newExpiry;
                     
                     // Update status based on expiry
                     const today = new Date().toISOString().split('T')[0];
@@ -6715,8 +7003,11 @@
                         user.status = 'active';
                     }
                     
+                    // Update both storage locations
                     localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('brainwave_users', JSON.stringify(users));
                     updateUsersTable(users);
+                    updateSubscriptionTable(users);
                     alert('Expiry date updated successfully!');
                 }
             }
@@ -6727,12 +7018,14 @@
                 window.adminDashboard.editUserPlanType(userId, newPlanType);
             } else {
                 // Fallback implementation
-                let users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
-                if (user) {
-                    user.planType = newPlanType;
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const userIndex = users.findIndex(u => u.id == userId);
+                if (userIndex !== -1) {
+                    users[userIndex].planType = newPlanType;
                     localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('brainwave_users', JSON.stringify(users));
                     updateUsersTable(users);
+                    updateSubscriptionTable(users);
                     alert(`Plan type updated to ${newPlanType} successfully!`);
                 }
             }
@@ -6743,13 +7036,16 @@
                 window.adminDashboard.toggleUserLock(userId);
             } else {
                 // Fallback implementation
-                let users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
-                if (user) {
-                    user.locked = !user.locked;
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const userIndex = users.findIndex(u => u.id == userId);
+                if (userIndex !== -1) {
+                    users[userIndex].locked = !users[userIndex].locked;
+                    users[userIndex].accountLocked = users[userIndex].locked;
                     localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('brainwave_users', JSON.stringify(users));
                     updateUsersTable(users);
-                    alert(`Account ${user.locked ? 'locked' : 'unlocked'} successfully!`);
+                    updateSubscriptionTable(users);
+                    alert(`Account ${users[userIndex].locked ? 'locked' : 'unlocked'} successfully!`);
                 }
             }
         }
@@ -6759,12 +7055,14 @@
                 window.adminDashboard.deleteUser(userId);
             } else {
                 // Fallback implementation
-                let users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const user = users.find(u => u.id == userId);
                 if (user && confirm(`Are you sure you want to delete ${user.name}?`)) {
-                    users = users.filter(u => u.id !== userId);
+                    users = users.filter(u => u.id != userId);
                     localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('brainwave_users', JSON.stringify(users));
                     updateUsersTable(users);
+                    updateSubscriptionTable(users);
                     alert('User deleted successfully!');
                 }
             }

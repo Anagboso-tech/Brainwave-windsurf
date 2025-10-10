@@ -719,6 +719,11 @@
             const level = selectedRole === 'student' ? document.getElementById('level').value : '';
             const stream = selectedRole === 'student' ? document.getElementById('stream').value : '';
             
+            // Calculate expiry date for bootcamp (7 days from now)
+            const bootcampExpiryDate = new Date();
+            bootcampExpiryDate.setDate(bootcampExpiryDate.getDate() + 7);
+            const expiryDateString = bootcampExpiryDate.toISOString().split('T')[0];
+            
             const userData = {
                 id: Date.now(),
                 name: `${firstName} ${lastName}`,
@@ -728,8 +733,10 @@
                 status: 'bootcamp',
                 isPaid: false,
                 paymentStatus: 'bootcamp',
-                expiry: null,
+                expiry: expiryDateString,
+                expiryDate: expiryDateString,
                 locked: false,
+                accountLocked: false,
                 joinDate: new Date().toISOString().split('T')[0],
                 bootcampStartDate: new Date().toISOString().split('T')[0],
                 paidDate: null,

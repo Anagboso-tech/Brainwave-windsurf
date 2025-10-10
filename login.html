@@ -62,27 +62,55 @@
             // In a real application, this would make an API call to authenticate
             setTimeout(() => {
                 // Get users from localStorage to check role
-                const users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
-                const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+                const userIndex = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
                 
-                if (!user) {
+                if (userIndex === -1) {
                     hideLoading();
                     alert('No account found with this email. Please sign up first.');
                     return;
                 }
                 
+                const user = users[userIndex];
+                
                 // In production, verify password hash here
                 // For now, we accept any password for demo purposes
                 
+                // Check and auto-lock expired accounts
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                if (user.expiry || user.expiryDate) {
+                    const expiryDate = new Date(user.expiry || user.expiryDate);
+                    expiryDate.setHours(0, 0, 0, 0);
+                    
+                    // If expiry date has passed, automatically lock the account
+                    if (expiryDate < today && !user.locked) {
+                        user.locked = true;
+                        user.accountLocked = true;
+                        user.status = 'expired';
+                        user.lockedReason = 'Subscription expired';
+                        user.lockedAt = new Date().toISOString();
+                        
+                        // Update in storage
+                        users[userIndex] = user;
+                        localStorage.setItem('brainwave_users', JSON.stringify(users));
+                        localStorage.setItem('users', JSON.stringify(users));
+                        
+                        console.log(`🔒 Account auto-locked: ${user.email} (Expired: ${user.expiry || user.expiryDate})`);
+                    }
+                }
+                
                 // Check if account is locked
-                if (user.locked) {
+                if (user.locked || user.accountLocked) {
                     hideLoading();
-                    alert('Your account has been locked. Please contact the administrator.');
+                    const reason = user.lockedReason || 'Your account has been locked';
+                    alert(`${reason}. Please contact the administrator or renew your subscription.`);
                     return;
                 }
                 
-                // Check subscription status for students
-                if (user.role === 'student' && user.status === 'expired') {
+                // Check subscription status
+                if (user.status === 'expired') {
                     hideLoading();
                     alert('Your subscription has expired. Please renew to continue.');
                     return;
