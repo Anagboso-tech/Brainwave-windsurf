@@ -233,8 +233,8 @@
                         <select id="stream" name="stream" required>
                             <option value="">Select your stream</option>
                             <option value="Science">Science</option>
-                            <option value="Arts">Arts</option>
-                            <option value="Commercial">Commercial</option>
+                            <option value="Humanities">Humanities</option>
+                            <option value="Business">Business</option>
                         </select>
                     </div>
                 </div>
@@ -426,7 +426,8 @@
                     questions: 15,
                     status: 'available',
                     description: 'Test your understanding of quadratic equations and their solutions',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 },
                 {
                     id: 'quiz_' + studentData.id + '_2',
@@ -441,7 +442,8 @@
                     questions: 12,
                     status: 'available',
                     description: 'Identify different types of chemical reactions and balance equations',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'paid'
                 },
                 {
                     id: 'quiz_' + studentData.id + '_3',
@@ -456,7 +458,8 @@
                     questions: 18,
                     status: 'available',
                     description: 'Newton\'s laws, motion, and forces in physics',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 },
                 {
                     id: 'assignment_' + studentData.id + '_1',
@@ -471,7 +474,8 @@
                     status: 'available',
                     description: 'Solve problems involving Newton\'s three laws of motion',
                     instructions: 'Complete all 5 problems and show your work clearly',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'paid'
                 },
                 {
                     id: 'assignment_' + studentData.id + '_2',
@@ -486,7 +490,8 @@
                     status: 'available',
                     description: 'Research and explain cellular processes',
                     instructions: 'Write a 1000-word essay on cell division',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 }
             ];
             
@@ -506,7 +511,8 @@
                     status: 'available',
                     description: 'Comprehensive WAEC Mathematics practice test',
                     examType: 'WAEC',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'paid'
                 },
                 {
                     id: 'mock_' + studentData.id + '_2',
@@ -522,7 +528,8 @@
                     status: 'available',
                     description: 'JAMB Physics mock examination',
                     examType: 'JAMB',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 }
             ];
             
@@ -541,7 +548,8 @@
                     topic: 'Calculus Integration Techniques',
                     duration: '60 minutes',
                     attendees: 45,
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 },
                 {
                     id: 'live_' + studentData.id + '_2',
@@ -556,7 +564,8 @@
                     topic: 'Newton\'s Laws of Motion',
                     duration: '45 minutes',
                     attendees: 0,
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'paid'
                 }
             ];
             
@@ -574,7 +583,8 @@
                     size: '12.5 MB',
                     downloadUrl: '#',
                     description: 'Comprehensive mathematics textbook covering all SS topics',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 },
                 {
                     id: 'book_' + studentData.id + '_2',
@@ -588,7 +598,8 @@
                     size: '9.8 MB',
                     downloadUrl: '#',
                     description: 'Essential physics concepts and problem-solving techniques',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'paid'
                 }
             ];
             
@@ -605,7 +616,8 @@
                     thumbnail: 'https://img.youtube.com/vi/sample-math/hqdefault.jpg',
                     videoUrl: 'https://youtube.com/watch?v=sample-math',
                     description: 'Complete WAEC mathematics preparation tutorial',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'bootcamp'
                 },
                 {
                     id: 'video_' + studentData.id + '_2',
@@ -619,7 +631,8 @@
                     thumbnail: 'https://img.youtube.com/vi/sample-chem/hqdefault.jpg',
                     videoUrl: 'https://youtube.com/watch?v=sample-chem',
                     description: 'Essential chemistry laboratory techniques and safety',
-                    createdAt: now.toISOString()
+                    createdAt: now.toISOString(),
+                    accessLevel: 'paid'
                 }
             ];
             
@@ -713,16 +726,22 @@
                 role: selectedRole,
                 plan: 'bootcamp',
                 status: 'bootcamp',
+                isPaid: false,
+                paymentStatus: 'bootcamp',
                 expiry: null,
                 locked: false,
                 joinDate: new Date().toISOString().split('T')[0],
                 bootcampStartDate: new Date().toISOString().split('T')[0],
+                paidDate: null,
                 planHistory: [{
                     from: null,
                     to: 'bootcamp',
                     changedAt: new Date().toISOString(),
                     changedBy: 'user_signup'
                 }],
+                // Email verification
+                emailVerified: false,
+                verifiedAt: null,
                 // Additional user info
                 userType: selectedRole === 'student' ? 'child' : 'parent',
                 classLevel: level,

@@ -271,13 +271,69 @@
             to { transform: rotate(360deg); }
         }
 
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 6px rgba(30, 58, 138, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 12px rgba(30, 58, 138, 0.4);
+            }
+        }
+
         @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
             .confirmation-container {
                 margin: 1rem;
             }
 
+            .confirmation-header {
+                padding: 2rem 1rem;
+            }
+
             .confirmation-header h1 {
                 font-size: 1.5rem;
+            }
+
+            .confirmation-body {
+                padding: 1.5rem 1rem;
+            }
+
+            .email-badge {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 0.75rem 1rem;
+                max-width: 100%;
+                word-break: break-all;
+                text-align: center;
+            }
+
+            .email-badge span {
+                word-break: break-word;
+                overflow-wrap: break-word;
+                max-width: 100%;
+            }
+
+            .info-box {
+                padding: 1rem;
+            }
+
+            .info-box h3 {
+                font-size: 1rem;
+            }
+
+            .info-box li {
+                font-size: 0.875rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -336,19 +392,19 @@
                 <ul>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>Check your email inbox for the verification link</span>
+                        <span>Click "Simulate Email Verification" below to verify your account</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>Click the link to verify your email address</span>
+                        <span>After verification, you'll be redirected to the login page</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>Once verified, you can log in to your dashboard</span>
+                        <span>Login with your email and password to access your dashboard</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>Didn't receive the email? Check your spam folder</span>
+                        <span>Enjoy your 7-day free bootcamp access!</span>
                     </li>
                 </ul>
             </div>
@@ -357,7 +413,10 @@
                 <button class="btn btn-verify" id="verifyBtn" onclick="simulateVerification()">
                     <i class="fas fa-check-double"></i> Simulate Email Verification
                 </button>
-                <a href="login.html" class="btn btn-primary">
+                <button class="btn btn-primary" id="dashboardBtn" onclick="goToDashboard()" style="display: none;">
+                    <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                </button>
+                <a href="login.html" class="btn btn-primary" id="loginBtn">
                     <i class="fas fa-sign-in-alt"></i> Go to Login Page
                 </a>
                 <button class="btn btn-secondary" onclick="resendEmail()">
@@ -420,39 +479,79 @@
                 const email = localStorage.getItem('pendingUserEmail');
                 const userRole = localStorage.getItem('pendingUserRole');
                 
+                console.log('🔍 Verifying user:', email, 'Role:', userRole);
+                
                 if (email) {
                     let users = JSON.parse(localStorage.getItem('brainwave_users')) || [];
+                    console.log('📋 Total users in system:', users.length);
+                    
                     const userIndex = users.findIndex(user => user.email === email);
+                    console.log('🔎 User index found:', userIndex);
                     
                     if (userIndex !== -1) {
+                        // Mark email as verified (but don't log them in yet)
                         users[userIndex].emailVerified = true;
                         users[userIndex].verifiedAt = new Date().toISOString();
+                        
+                        // Save updated user data
                         localStorage.setItem('brainwave_users', JSON.stringify(users));
                         localStorage.setItem('users', JSON.stringify(users));
                         
-                        // Update current user session
-                        localStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+                        console.log('✅ Email verified successfully');
+                        console.log('👤 User data:', {
+                            email: users[userIndex].email,
+                            role: users[userIndex].role,
+                            name: users[userIndex].name,
+                            id: users[userIndex].id,
+                            emailVerified: users[userIndex].emailVerified
+                        });
+                        
+                        // Clear pending data
+                        localStorage.removeItem('pendingUserEmail');
+                        localStorage.removeItem('pendingUserRole');
+                        localStorage.removeItem('pendingStudentCode');
+                    } else {
+                        console.error('❌ User not found in brainwave_users!');
+                        console.log('Available users:', users.map(u => ({ email: u.email, role: u.role })));
                     }
+                } else {
+                    console.error('❌ No pending email found!');
                 }
                 
                 // Update button
                 verifyBtn.innerHTML = '<i class="fas fa-check-double"></i> Verified Successfully!';
                 verifyBtn.style.background = '#10b981';
                 
-                // Show success message
-                alert('✅ Email verified successfully! Redirecting to your dashboard...');
+                // Hide verify button and show login button prominently
+                const dashboardBtn = document.getElementById('dashboardBtn');
+                const loginBtn = document.getElementById('loginBtn');
+                dashboardBtn.style.display = 'none';
+                loginBtn.style.display = 'inline-flex';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Proceed to Login';
+                loginBtn.style.animation = 'pulse 2s infinite';
                 
-                // Redirect to appropriate dashboard based on role
+                // Show success message
+                alert('✅ Email verified successfully! Please login to access your dashboard.');
+                
+                // Redirect to login page
                 setTimeout(() => {
-                    if (userRole === 'student') {
-                        window.location.href = 'student-dashboard.html';
-                    } else if (userRole === 'parent') {
-                        window.location.href = 'parent-link-children.html';
-                    } else {
-                        window.location.href = 'login.html';
-                    }
+                    console.log('🚀 Redirecting to login page...');
+                    window.location.href = 'login.html';
                 }, 2000);
             }, 2000);
+        }
+
+        // Go to dashboard after verification
+        function goToDashboard() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (currentUser.role === 'student') {
+                window.location.href = 'student-dashboard.html';
+            } else if (currentUser.role === 'parent') {
+                window.location.href = 'parent-dashboard.html';
+            } else {
+                window.location.href = 'login.html';
+            }
         }
 
         // Resend verification email (simulated)

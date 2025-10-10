@@ -157,7 +157,7 @@
             <p>Email: john.doe@student.com | Password: john.doe</p>
             <p>Student Code: <span id="code1">-</span></p>
             <br>
-            <p><strong>Student 2 (SS3 Arts):</strong></p>
+            <p><strong>Student 2 (SS3 Humanities):</strong></p>
             <p>Email: jane.smith@student.com | Password: jane.smith</p>
             <p>Student Code: <span id="code2">-</span></p>
             <br>
@@ -216,7 +216,7 @@
                     phone: '+234 802 345 6789',
                     role: 'student',
                     classLevel: 'SS3',
-                    stream: 'Arts',
+                    stream: 'Humanities',
                     studentCode: generateCode(),
                     plan: '30',
                     status: 'active',
@@ -287,10 +287,10 @@
                 { id: Date.now() + 2, name: 'Chemistry', classLevel: 'SS2', stream: 'Science', createdAt: new Date().toISOString() },
                 { id: Date.now() + 3, name: 'Biology', classLevel: 'SS2', stream: 'Science', createdAt: new Date().toISOString() },
                 
-                // SS3 Arts
-                { id: Date.now() + 4, name: 'Literature', classLevel: 'SS3', stream: 'Arts', createdAt: new Date().toISOString() },
-                { id: Date.now() + 5, name: 'Government', classLevel: 'SS3', stream: 'Arts', createdAt: new Date().toISOString() },
-                { id: Date.now() + 6, name: 'History', classLevel: 'SS3', stream: 'Arts', createdAt: new Date().toISOString() },
+                // SS3 Humanities
+                { id: Date.now() + 4, name: 'Literature', classLevel: 'SS3', stream: 'Humanities', createdAt: new Date().toISOString() },
+                { id: Date.now() + 5, name: 'Government', classLevel: 'SS3', stream: 'Humanities', createdAt: new Date().toISOString() },
+                { id: Date.now() + 6, name: 'History', classLevel: 'SS3', stream: 'Humanities', createdAt: new Date().toISOString() },
                 
                 // Jambite Science
                 { id: Date.now() + 7, name: 'Use of English', classLevel: 'Jambite', stream: 'Science', createdAt: new Date().toISOString() },
@@ -299,7 +299,7 @@
                 
                 // General subjects
                 { id: Date.now() + 10, name: 'English Language', classLevel: 'All Levels', stream: 'General', createdAt: new Date().toISOString() },
-                { id: Date.now() + 11, name: 'Civic Education', classLevel: 'All Levels', stream: 'General', createdAt: new Date().toISOString() }
+                { id: Date.now() + 11, name: 'Citizenship and Heritage Studies', classLevel: 'All Levels', stream: 'General', createdAt: new Date().toISOString() }
             ];
 
             localStorage.setItem('brainwave_subjects', JSON.stringify(subjects));
@@ -335,10 +335,10 @@
                 {
                     id: Date.now() + 2,
                     title: 'Literature in English',
-                    description: 'Comprehensive literature guide for SS3 Arts students',
+                    description: 'Comprehensive literature guide for SS3 Humanities students',
                     subject: 'Literature',
                     classLevel: 'SS3',
-                    stream: 'Arts',
+                    stream: 'Humanities',
                     link: 'https://drive.google.com/file/d/sample3',
                     thumbnail: 'https://via.placeholder.com/300x400/8b5cf6/ffffff?text=Literature',
                     createdAt: new Date().toISOString()
@@ -434,7 +434,7 @@
                     title: 'Literature Essay',
                     subject: 'Literature',
                     classLevel: 'SS3',
-                    stream: 'Arts',
+                    stream: 'Humanities',
                     dueDate: futureDate,
                     duration: '120',
                     totalMarks: 100,
@@ -509,7 +509,7 @@
                     subject: 'Literature',
                     teacher: 'Mrs. Bello',
                     classLevel: 'SS3',
-                    stream: 'Arts',
+                    stream: 'Humanities',
                     date: new Date().toISOString().split('T')[0],
                     time: '11:00 AM',
                     status: 'live',

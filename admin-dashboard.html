@@ -626,32 +626,291 @@
                 display: block;
             }
 
+            /* Top Bar - Compact */
             .top-bar {
-                padding: var(--spacing-md) var(--spacing-lg);
+                padding: var(--spacing-sm) var(--spacing-md);
             }
 
             .page-title {
-                font-size: 1.5rem;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .analytics-section {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-actions {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                font-size: 1.125rem;
             }
 
             .user-menu {
                 gap: var(--spacing-sm);
             }
 
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 0.875rem;
+            }
+
+            .notification-btn {
+                font-size: 1.125rem;
+            }
+
+            /* Content Area - Reduced Padding */
             .content-area {
-                padding: var(--spacing-lg);
+                padding: var(--spacing-md);
+            }
+
+            /* Dashboard Grid - Compact */
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+                margin-bottom: var(--spacing-lg);
+            }
+
+            /* Stat Cards - Compact */
+            .stat-card {
+                padding: var(--spacing-md);
+            }
+
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+            }
+
+            .stat-title {
+                font-size: 0.75rem;
+            }
+
+            .stat-change {
+                font-size: 0.8125rem;
+            }
+
+            /* Analytics Section - Single Column */
+            .analytics-section {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+                margin-bottom: var(--spacing-lg);
+            }
+
+            /* Chart Cards - Compact */
+            .chart-card {
+                padding: var(--spacing-md);
+            }
+
+            .chart-title {
+                font-size: 1rem;
+            }
+
+            .chart-header {
+                margin-bottom: var(--spacing-md);
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+
+            .chart-placeholder {
+                height: 250px;
+            }
+
+            /* Section Headers - Compact */
+            .section-header {
+                margin-bottom: var(--spacing-md);
+                padding-bottom: var(--spacing-md);
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+
+            .section-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .section-actions {
+                width: 100%;
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+
+            .section-actions button,
+            .section-actions .btn {
+                width: 100%;
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.875rem;
+            }
+
+            /* Stats Row - Compact */
+            .stats-row {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .mini-stat-card {
+                padding: var(--spacing-md);
+            }
+
+            .mini-stat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.125rem;
+            }
+
+            .mini-stat-value {
+                font-size: 1.25rem;
+            }
+
+            .mini-stat-label {
+                font-size: 0.8125rem;
+            }
+
+            /* Filters Section - Compact */
+            .filters-section {
+                padding: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .search-box {
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .filter-controls {
+                gap: var(--spacing-sm);
+            }
+
+            .filter-select {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.8125rem;
+            }
+
+            /* Quick Actions - Compact Grid */
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--spacing-sm);
+            }
+
+            .quick-action-btn {
+                padding: var(--spacing-md);
+                font-size: 0.8125rem;
+            }
+
+            .quick-action-btn i {
+                font-size: 1.25rem;
+            }
+
+            /* Tables - Compact */
+            .data-table th,
+            .data-table td {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.8125rem;
+            }
+
+            .data-table th {
+                font-size: 0.75rem;
+            }
+
+            /* Action Buttons - Compact */
+            .action-btn,
+            .btn-sm {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.75rem;
+            }
+
+            /* Cards - Compact */
+            .card {
+                padding: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .card-header {
+                padding: var(--spacing-md);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .card-body {
+                padding: var(--spacing-md);
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            /* Forms - Compact */
+            .form-group {
+                margin-bottom: var(--spacing-md);
+            }
+
+            .form-label {
+                font-size: 0.875rem;
+                margin-bottom: var(--spacing-xs);
+            }
+
+            .form-input,
+            .form-select,
+            .form-textarea {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.875rem;
+            }
+
+            /* Modals - Better Mobile Fit */
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                margin: var(--spacing-md);
+                max-height: 90vh;
+            }
+
+            .modal-header {
+                padding: var(--spacing-md);
+            }
+
+            .modal-body {
+                padding: var(--spacing-md);
+            }
+
+            .modal-footer {
+                padding: var(--spacing-md);
+                gap: var(--spacing-sm);
+            }
+
+            .modal-title {
+                font-size: 1.125rem;
+            }
+
+            /* Tab Navigation - Compact */
+            .tab-nav {
+                gap: var(--spacing-xs);
+                overflow-x: auto;
+            }
+
+            .tab-btn,
+            .content-tab-btn,
+            .assessment-tab-btn {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: 0.8125rem;
+                white-space: nowrap;
+            }
+
+            /* Lists - Compact */
+            .list-item {
+                padding: var(--spacing-md);
+            }
+
+            /* Badges - Compact */
+            .badge {
+                padding: var(--spacing-xs) var(--spacing-sm);
+                font-size: 0.75rem;
+            }
+
+            /* Empty States - Compact */
+            .empty-state {
+                padding: var(--spacing-xl);
+            }
+
+            .empty-state-icon {
+                font-size: 2.5rem;
+            }
+
+            .empty-state-text {
+                font-size: 0.875rem;
             }
         }
 
@@ -675,20 +934,79 @@
         }
 
         @media (max-width: 480px) {
+            /* Extra Small Devices - Ultra Compact */
             .top-bar {
-                padding: var(--spacing-sm) var(--spacing-md);
+                padding: var(--spacing-xs) var(--spacing-sm);
             }
 
             .page-title {
-                font-size: 1.25rem;
+                font-size: 1rem;
             }
 
             .content-area {
-                padding: var(--spacing-md);
+                padding: var(--spacing-sm);
             }
 
             .dashboard-grid {
-                gap: var(--spacing-lg);
+                gap: var(--spacing-sm);
+            }
+
+            .stat-card {
+                padding: var(--spacing-sm);
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .stat-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.125rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.125rem;
+            }
+
+            .chart-card {
+                padding: var(--spacing-sm);
+            }
+
+            .chart-placeholder {
+                height: 200px;
+            }
+
+            .mini-stat-card {
+                padding: var(--spacing-sm);
+            }
+
+            .mini-stat-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .mini-stat-value {
+                font-size: 1.125rem;
+            }
+
+            .filters-section {
+                padding: var(--spacing-sm);
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 98%;
+                margin: var(--spacing-sm);
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: var(--spacing-sm);
             }
         }
 
@@ -1796,7 +2114,7 @@
                                                 <option value="">All Subjects</option>
                                                 <option value="Mathematics">Mathematics</option>
                                                 <option value="English Language">English Language</option>
-                                                <option value="Civic Education">Civic Education</option>
+                                                <option value="Citizenship and Heritage Studies">Citizenship and Heritage Studies</option>
                                                 <option value="Physics">Physics</option>
                                                 <option value="Chemistry">Chemistry</option>
                                                 <option value="Biology">Biology</option>
@@ -1863,7 +2181,7 @@
                                                 <option value="">All Subjects</option>
                                                 <option value="Mathematics">Mathematics</option>
                                                 <option value="English Language">English Language</option>
-                                                <option value="Civic Education">Civic Education</option>
+                                                <option value="Citizenship and Heritage Studies">Citizenship and Heritage Studies</option>
                                                 <option value="Physics">Physics</option>
                                                 <option value="Chemistry">Chemistry</option>
                                                 <option value="Biology">Biology</option>
@@ -1927,8 +2245,8 @@
                                         <option value="">All Streams</option>
                                         <option value="General">General</option>
                                         <option value="Science">Science</option>
-                                        <option value="Arts">Arts</option>
-                                        <option value="Commerce">Commerce</option>
+                                        <option value="Humanities">Humanities</option>
+                                        <option value="Business">Business</option>
                                         <option value="JAMB">JAMB</option>
                                     </select>
                                 </div>
@@ -2025,14 +2343,14 @@
                                 </div>
                             </div>
 
-                            <!-- Civic Education Subject -->
+                            <!-- Citizenship and Heritage Studies Subject -->
                             <div class="subject-card" data-stream="General" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-balance-scale"></i>
                                     </div>
                                     <div style="flex: 1;">
-                                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.1rem;">Civic Education</h3>
+                                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.1rem;">Citizenship and Heritage Studies</h3>
                                         <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">Study of citizenship, rights, responsibilities, and civic duties in society.</p>
                                     </div>
                                 </div>
@@ -2135,7 +2453,7 @@
                             </div>
 
                             <!-- Biology Subject -->
-                            <div class="subject-card" data-stream="Science,Arts,Commerce" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <div class="subject-card" data-stream="Science,Humanities,Business" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-dna"></i>
@@ -2169,7 +2487,7 @@
                             </div>
 
                             <!-- Economics Subject (Multi-stream) -->
-                            <div class="subject-card" data-stream="Science,Arts,Commerce" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <div class="subject-card" data-stream="Science,Humanities,Business" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-chart-line"></i>
@@ -2205,12 +2523,12 @@
                             <!-- ARTS STREAM SECTION -->
                             <div style="grid-column: 1 / -1; margin-top: 2rem; margin-bottom: 0.5rem;">
                                 <h3 style="color: #8e44ad; font-size: 1.2rem; border-left: 4px solid #8e44ad; padding-left: 1rem; margin: 0;">
-                                    🎨 Arts Stream Subjects
+                                    🎨 Humanities Stream Subjects
                                 </h3>
                             </div>
                             
                             <!-- Literature-in-English Subject -->
-                            <div class="subject-card" data-stream="Arts" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <div class="subject-card" data-stream="Humanities" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8e44ad, #9b59b6); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-feather-alt"></i>
@@ -2221,7 +2539,7 @@
                                     </div>
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #8e44ad; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Arts Stream</span>
+                                    <span style="background: #8e44ad; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Humanities Stream</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">SS1, SS2, SS3</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
@@ -2244,7 +2562,7 @@
                             </div>
 
                             <!-- Government Subject -->
-                            <div class="subject-card" data-stream="Arts" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <div class="subject-card" data-stream="Humanities" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #34495e, #2c3e50); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-university"></i>
@@ -2255,7 +2573,7 @@
                                     </div>
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #34495e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Arts Stream</span>
+                                    <span style="background: #34495e; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Humanities Stream</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">SS1, SS2, SS3</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
@@ -2280,12 +2598,12 @@
                             <!-- COMMERCE STREAM SECTION -->
                             <div style="grid-column: 1 / -1; margin-top: 2rem; margin-bottom: 0.5rem;">
                                 <h3 style="color: #e67e22; font-size: 1.2rem; border-left: 4px solid #e67e22; padding-left: 1rem; margin: 0;">
-                                    💼 Commerce Stream Subjects
+                                    💼 Business Stream Subjects
                                 </h3>
                             </div>
                             
                             <!-- Commerce Subject -->
-                            <div class="subject-card" data-stream="Commerce" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <div class="subject-card" data-stream="Business" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #e67e22, #d35400); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-handshake"></i>
@@ -2296,7 +2614,7 @@
                                     </div>
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #e67e22; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Commerce Stream</span>
+                                    <span style="background: #e67e22; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Business Stream</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">SS1, SS2, SS3</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
@@ -2319,7 +2637,7 @@
                             </div>
 
                             <!-- Accounts Subject -->
-                            <div class="subject-card" data-stream="Commerce" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <div class="subject-card" data-stream="Business" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #16a085, #1abc9c); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-calculator"></i>
@@ -2330,7 +2648,7 @@
                                     </div>
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #16a085; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Commerce Stream</span>
+                                    <span style="background: #16a085; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Business Stream</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">SS1, SS2, SS3</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
@@ -2352,8 +2670,8 @@
                                 </div>
                             </div>
 
-                            <!-- CRS Subject (Arts) -->
-                            <div class="subject-card" data-stream="Arts" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                            <!-- CRS Subject (Humanities) -->
+                            <div class="subject-card" data-stream="Humanities" data-class="SS1,SS2,SS3" style="background: var(--card-bg); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #c0392b, #e74c3c); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-cross"></i>
@@ -2364,7 +2682,7 @@
                                     </div>
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                    <span style="background: #c0392b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Arts Stream</span>
+                                    <span style="background: #c0392b; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Humanities Stream</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">SS1, SS2, SS3</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
@@ -2437,15 +2755,15 @@
                                 </div>
                             </div>
 
-                            <!-- JAMB Arts Combination -->
-                            <div class="subject-card" data-stream="JAMB" data-class="JAMB" data-department="Arts" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-md); border: 2px solid #8e44ad; transition: all 0.3s ease;">
+                            <!-- JAMB Humanities Combination -->
+                            <div class="subject-card" data-stream="JAMB" data-class="JAMB" data-department="Humanities" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-md); border: 2px solid #8e44ad; transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #8e44ad, #9b59b6); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-feather-alt"></i>
                                     </div>
                                     <div style="flex: 1;">
-                                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.1rem;">JAMB - Arts Combination</h3>
-                                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">JAMB subject combination for Arts students preparing for university entrance.</p>
+                                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.1rem;">JAMB - Humanities Combination</h3>
+                                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">JAMB subject combination for Humanities students preparing for university entrance.</p>
                                     </div>
                                 </div>
                                 <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
@@ -2458,7 +2776,7 @@
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                                     <span style="background: #8e44ad; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">JAMB</span>
-                                    <span style="background: var(--info-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Arts</span>
+                                    <span style="background: var(--info-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Humanities</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
@@ -2479,15 +2797,15 @@
                                 </div>
                             </div>
 
-                            <!-- JAMB Commercial Combination -->
+                            <!-- JAMB Business Combination -->
                             <div class="subject-card" data-stream="JAMB" data-class="JAMB" data-department="Commerce" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-md); border: 2px solid #e67e22; transition: all 0.3s ease;">
                                 <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #e67e22, #d35400); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
                                         <i class="fas fa-handshake"></i>
                                     </div>
                                     <div style="flex: 1;">
-                                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.1rem;">JAMB - Commercial Combination</h3>
-                                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">JAMB subject combination for Commercial students preparing for university entrance.</p>
+                                        <h3 style="margin: 0 0 0.5rem 0; color: var(--text-primary); font-size: 1.1rem;">JAMB - Business Combination</h3>
+                                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">JAMB subject combination for Business students preparing for university entrance.</p>
                                     </div>
                                 </div>
                                 <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
@@ -2499,7 +2817,7 @@
                                 </div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
                                     <span style="background: #e67e22; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">JAMB</span>
-                                    <span style="background: var(--info-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Commercial</span>
+                                    <span style="background: var(--info-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Business</span>
                                     <span style="background: var(--success-color); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">Active</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
@@ -2901,8 +3219,8 @@
                                         <option value="">All Streams</option>
                                         <option value="General">General</option>
                                         <option value="Science">Science</option>
-                                        <option value="Arts">Arts</option>
-                                        <option value="Commerce">Commerce</option>
+                                        <option value="Humanities">Humanities</option>
+                                        <option value="Business">Business</option>
                                     </select>
                                 </div>
                                 <div>
@@ -2960,8 +3278,8 @@
                                     <select id="spreadsheet-stream-filter" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.875rem; background: var(--white);">
                                         <option value="">All Streams</option>
                                         <option value="Science">Science</option>
-                                        <option value="Arts">Arts</option>
-                                        <option value="Commerce">Commerce</option>
+                                        <option value="Humanities">Humanities</option>
+                                        <option value="Business">Business</option>
                                     </select>
                                     <select id="spreadsheet-subject-filter" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.875rem; background: var(--white);">
                                         <option value="">All Subjects</option>
@@ -3157,6 +3475,7 @@
                                                 <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--border-color); font-weight: 600;">User Name</th>
                                                 <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid var(--border-color); font-weight: 600;">Email</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Status</th>
+                                                <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Payment Status</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Plan</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Plan Type</th>
                                                 <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 600;">Expiry Date</th>
@@ -3165,7 +3484,7 @@
                                         </thead>
                                         <tbody id="users-table-body">
                                             <tr>
-                                                <td colspan="7" style="padding: 3rem; text-align: center; color: var(--text-secondary);">
+                                                <td colspan="8" style="padding: 3rem; text-align: center; color: var(--text-secondary);">
                                                     <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 0.5rem; display: block; color: var(--border-color);"></i>
                                                     No users yet. Click "Add User" to get started.
                                                 </td>
@@ -3571,7 +3890,7 @@
                             <optgroup label="General Subjects">
                                 <option value="Mathematics">Mathematics</option>
                                 <option value="English Language">English Language</option>
-                                <option value="Civic Education">Civic Education</option>
+                                <option value="Citizenship and Heritage Studies">Citizenship and Heritage Studies</option>
                             </optgroup>
                             <optgroup label="Science Stream">
                                 <option value="Physics">Physics</option>
@@ -3581,12 +3900,12 @@
                                 <option value="Biology">Biology</option>
                                 <option value="Economics">Economics</option>
                             </optgroup>
-                            <optgroup label="Arts Stream">
+                            <optgroup label="Humanities Stream">
                                 <option value="Literature-in-English">Literature-in-English</option>
                                 <option value="Government">Government</option>
                                 <option value="CRS">CRS</option>
                             </optgroup>
-                            <optgroup label="Commerce Stream">
+                            <optgroup label="Business Stream">
                                 <option value="Commerce">Commerce</option>
                                 <option value="Accounts">Accounts</option>
                             </optgroup>
@@ -3610,9 +3929,20 @@
                     <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Paste the full YouTube video URL</small>
                 </div>
                 
-                <div id="video-duration-field" style="margin-bottom: 1.5rem; display: none;">
+                <div id="video-duration-field" style="margin-bottom: 1rem; display: none;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Duration (optional)</label>
                     <input type="text" id="video-duration" placeholder="e.g., 15 min" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem;">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Access Level *</label>
+                    <select id="content-access-level" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                        <option value="bootcamp">Bootcamp (Free 7-day trial)</option>
+                        <option value="paid">Paid Members Only</option>
+                    </select>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
+                        <i class="fas fa-info-circle"></i> Bootcamp content is accessible to all students. Paid content requires payment.
+                    </p>
                 </div>
                 
                 <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
@@ -3671,6 +4001,17 @@
                         <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Total Marks *</label>
                         <input type="number" id="assessment-marks" required min="1" placeholder="e.g., 100" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem;">
                     </div>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Access Level *</label>
+                    <select id="assessment-access-level" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                        <option value="bootcamp">Bootcamp (Free 7-day trial)</option>
+                        <option value="paid">Paid Members Only</option>
+                    </select>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
+                        <i class="fas fa-info-circle"></i> Bootcamp content is accessible to all students. Paid content requires payment.
+                    </p>
                 </div>
 
                 <div style="margin-bottom: 1.5rem;">
@@ -3768,6 +4109,17 @@
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Meeting Link *</label>
                     <input type="url" id="liveclass-link" required placeholder="https://zoom.us/j/... or Google Meet link" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem;">
                     <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">Zoom, Google Meet, or any video conferencing link</small>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Access Level *</label>
+                    <select id="liveclass-access-level" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                        <option value="bootcamp">Bootcamp (Free 7-day trial)</option>
+                        <option value="paid">Paid Members Only</option>
+                    </select>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
+                        <i class="fas fa-info-circle"></i> Bootcamp content is accessible to all students. Paid content requires payment.
+                    </p>
                 </div>
                 
                 <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
@@ -4012,6 +4364,17 @@
                     </select>
                     <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
                         <i class="fas fa-info-circle"></i> Individual: Single user. Family: Multiple users.
+                    </small>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Payment Status *</label>
+                    <select id="subscription-payment-status" required style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.875rem; background: var(--white);">
+                        <option value="bootcamp">Bootcamp (Free 7-day trial)</option>
+                        <option value="paid">Paid Member</option>
+                    </select>
+                    <small style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+                        <i class="fas fa-info-circle"></i> Bootcamp users can only access free content. Paid members access all content.
                     </small>
                 </div>
                 
@@ -4487,10 +4850,10 @@
                     if (subjects.length === 0) {
                         // Add default subjects
                         const defaultSubjects = [
-                            { group: 'General Subjects', subjects: ['Mathematics', 'English Language', 'Civic Education'] },
+                            { group: 'General Subjects', subjects: ['Mathematics', 'English Language', 'Citizenship and Heritage Studies'] },
                             { group: 'Science Stream', subjects: ['Physics', 'Chemistry', 'Biology'] },
-                            { group: 'Arts Stream', subjects: ['Literature-in-English', 'Government', 'CRS'] },
-                            { group: 'Commerce Stream', subjects: ['Commerce', 'Accounts', 'Economics'] }
+                            { group: 'Humanities Stream', subjects: ['Literature-in-English', 'Government', 'CRS'] },
+                            { group: 'Business Stream', subjects: ['Commerce', 'Accounts', 'Economics'] }
                         ];
                         
                         defaultSubjects.forEach(group => {
@@ -4512,8 +4875,8 @@
                         const subjectGroups = {
                             'General': [],
                             'Science': [],
-                            'Arts': [],
-                            'Commerce': [],
+                            'Humanities': [],
+                            'Business': [],
                             'Multi-Stream': [],
                             'JAMB': []
                         };
@@ -4961,6 +5324,7 @@
             const subject = document.getElementById('assessment-subject').value;
             const duration = parseInt(document.getElementById('assessment-duration').value);
             const totalMarks = parseInt(document.getElementById('assessment-marks').value);
+            const accessLevel = document.getElementById('assessment-access-level').value;
             
             if (!title || !classLevel || !subject || !duration || !totalMarks) {
                 alert('Please fill in all required fields');
@@ -4980,6 +5344,7 @@
             
             const assessmentData = {
                 id: Date.now(),
+                type,
                 title,
                 description,
                 classLevel,
@@ -4987,6 +5352,8 @@
                 duration,
                 totalMarks,
                 questions,
+                accessLevel: accessLevel || 'bootcamp',
+                status: 'available',
                 createdAt: new Date().toISOString()
             };
             
@@ -6054,11 +6421,12 @@
                 const name = document.getElementById('subscription-name').value;
                 const plan = document.getElementById('subscription-plan').value;
                 const planType = document.getElementById('subscription-plan-type').value;
+                const paymentStatus = document.getElementById('subscription-payment-status').value;
                 const expiry = document.getElementById('subscription-expiry').value;
                 const locked = document.getElementById('subscription-locked').checked;
                 
                 // Validate required fields
-                if (!email || !name || !plan || !planType) {
+                if (!email || !name || !plan || !planType || !paymentStatus) {
                     alert('Please fill in all required fields!');
                     return;
                 }
@@ -6072,6 +6440,9 @@
                     expiryDate = date.toISOString().split('T')[0];
                 }
                 
+                // Determine if user is paid
+                const isPaid = paymentStatus === 'paid';
+                
                 const subscription = {
                     id: Date.now(),
                     email: email,
@@ -6079,6 +6450,9 @@
                     plan: plan,
                     planType: planType,
                     status: plan === 'bootcamp' ? 'bootcamp' : 'active',
+                    paymentStatus: paymentStatus,
+                    isPaid: isPaid,
+                    paidDate: isPaid ? new Date().toISOString().split('T')[0] : null,
                     expiry: expiryDate,
                     locked: locked,
                     joinDate: new Date().toISOString().split('T')[0],
@@ -6134,6 +6508,7 @@
         function createUserRowHTML(user) {
             const statusBadge = getStatusBadgeHTML(user);
             const bootcampInfo = getBootcampInfoHTML(user);
+            const paymentStatusBadge = getPaymentStatusBadgeHTML(user);
             
             return `
                 <tr style="border-bottom: 1px solid var(--border-color);">
@@ -6145,6 +6520,14 @@
                     </td>
                     <td style="padding: 0.75rem; color: var(--text-secondary);">${user.email}</td>
                     <td style="padding: 0.75rem; text-align: center;">${statusBadge}</td>
+                    <td style="padding: 0.75rem; text-align: center;">
+                        <select onchange="editUserPaymentStatus(${user.id}, this.value)" 
+                                style="padding: 0.25rem 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; background: white;">
+                            <option value="bootcamp" ${(!user.paymentStatus || user.paymentStatus === 'bootcamp') ? 'selected' : ''}>Bootcamp</option>
+                            <option value="paid" ${user.paymentStatus === 'paid' ? 'selected' : ''}>Paid</option>
+                        </select>
+                        ${paymentStatusBadge}
+                    </td>
                     <td style="padding: 0.75rem; text-align: center;">
                         <select onchange="editUserPlan(${user.id}, this.value)" 
                                 style="padding: 0.25rem 0.5rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.75rem; background: white;">
@@ -6234,7 +6617,39 @@
             return infoHtml;
         }
         
+        function getPaymentStatusBadgeHTML(user) {
+            const isPaid = user.isPaid || user.paymentStatus === 'paid';
+            
+            if (isPaid) {
+                return '<div style="font-size: 0.65rem; margin-top: 0.25rem;"><span style="background: #10b981; color: white; padding: 0.15rem 0.5rem; border-radius: 8px; font-weight: 600;"><i class="fas fa-check-circle"></i> Paid</span></div>';
+            } else {
+                return '<div style="font-size: 0.65rem; margin-top: 0.25rem;"><span style="background: #f59e0b; color: white; padding: 0.15rem 0.5rem; border-radius: 8px; font-weight: 600;"><i class="fas fa-graduation-cap"></i> Bootcamp</span></div>';
+            }
+        }
+        
         // Global functions for table functionality
+        function editUserPaymentStatus(userId, newPaymentStatus) {
+            let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+            const userIndex = users.findIndex(u => u.id == userId);
+            
+            if (userIndex !== -1) {
+                const user = users[userIndex];
+                user.paymentStatus = newPaymentStatus;
+                user.isPaid = newPaymentStatus === 'paid';
+                user.paidDate = newPaymentStatus === 'paid' ? new Date().toISOString().split('T')[0] : null;
+                
+                // Update in both storage locations
+                localStorage.setItem('brainwave_users', JSON.stringify(users));
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Update table
+                updateUsersTable(users);
+                updateSubscriptionTable(users);
+                
+                console.log(`✅ Payment status updated for user ${userId} to ${newPaymentStatus}`);
+            }
+        }
+        
         function editUserPlan(userId, newPlan) {
             if (window.adminDashboard && window.adminDashboard.editUserPlan) {
                 window.adminDashboard.editUserPlan(userId, newPlan);

@@ -214,9 +214,9 @@
         <h2>Step 2: Test Content Filtering</h2>
         <div class="button-group">
             <button onclick="testFiltering('SS2', 'Science')">Test SS2 Science</button>
-            <button onclick="testFiltering('SS3', 'Arts')">Test SS3 Arts</button>
+            <button onclick="testFiltering('SS3', 'Humanities')">Test SS3 Humanities</button>
             <button onclick="testFiltering('Jambite', 'Science')">Test Jambite Science</button>
-            <button onclick="testFiltering('SS1', 'Commercial')">Test SS1 Commercial</button>
+            <button onclick="testFiltering('SS1', 'Business')">Test SS1 Business</button>
         </div>
 
         <div id="filterResults"></div>
@@ -267,12 +267,12 @@
                 },
                 {
                     id: Date.now() + 1,
-                    name: 'Sarah Arts',
-                    email: 'sarah.arts@test.com',
+                    name: 'Sarah Humanities',
+                    email: 'sarah.humanities@test.com',
                     phone: '+234 802 222 2222',
                     role: 'student',
                     classLevel: 'SS3',
-                    stream: 'Arts',
+                    stream: 'Humanities',
                     studentCode: generateCode(),
                     plan: '30',
                     status: 'active',
@@ -310,9 +310,9 @@
                 { id: Date.now() + 1, name: 'Physics', classLevel: 'SS2', stream: 'Science', createdAt: new Date().toISOString() },
                 { id: Date.now() + 2, name: 'Chemistry', classLevel: 'SS2', stream: 'Science', createdAt: new Date().toISOString() },
                 { id: Date.now() + 3, name: 'Biology', classLevel: 'SS2', stream: 'Science', createdAt: new Date().toISOString() },
-                { id: Date.now() + 4, name: 'Literature', classLevel: 'SS3', stream: 'Arts', createdAt: new Date().toISOString() },
-                { id: Date.now() + 5, name: 'Government', classLevel: 'SS3', stream: 'Arts', createdAt: new Date().toISOString() },
-                { id: Date.now() + 6, name: 'History', classLevel: 'SS3', stream: 'Arts', createdAt: new Date().toISOString() },
+                { id: Date.now() + 4, name: 'Literature', classLevel: 'SS3', stream: 'Humanities', createdAt: new Date().toISOString() },
+                { id: Date.now() + 5, name: 'Government', classLevel: 'SS3', stream: 'Humanities', createdAt: new Date().toISOString() },
+                { id: Date.now() + 6, name: 'History', classLevel: 'SS3', stream: 'Humanities', createdAt: new Date().toISOString() },
                 { id: Date.now() + 7, name: 'Use of English', classLevel: 'Jambite', stream: 'Science', createdAt: new Date().toISOString() },
                 { id: Date.now() + 8, name: 'Physics (JAMB)', classLevel: 'Jambite', stream: 'Science', createdAt: new Date().toISOString() },
                 { id: Date.now() + 9, name: 'English Language', classLevel: 'All Levels', stream: 'General', createdAt: new Date().toISOString() }
@@ -323,13 +323,13 @@
             // Create study materials
             const books = [
                 { id: Date.now(), title: 'Math Textbook', description: 'SS2 Mathematics', subject: 'Mathematics', classLevel: 'SS2', stream: 'Science', link: 'https://drive.google.com/sample', createdAt: new Date().toISOString() },
-                { id: Date.now() + 1, title: 'Literature Guide', description: 'SS3 Literature', subject: 'Literature', classLevel: 'SS3', stream: 'Arts', link: 'https://drive.google.com/sample2', createdAt: new Date().toISOString() },
+                { id: Date.now() + 1, title: 'Literature Guide', description: 'SS3 Literature', subject: 'Literature', classLevel: 'SS3', stream: 'Humanities', link: 'https://drive.google.com/sample2', createdAt: new Date().toISOString() },
                 { id: Date.now() + 2, title: 'JAMB Physics', description: 'JAMB Preparation', subject: 'Physics (JAMB)', classLevel: 'Jambite', stream: 'Science', link: 'https://drive.google.com/sample3', createdAt: new Date().toISOString() }
             ];
 
             const videos = [
                 { id: Date.now() + 10, title: 'Calculus Tutorial', description: 'Learn calculus', subject: 'Mathematics', classLevel: 'SS2', stream: 'Science', link: 'https://www.youtube.com/watch?v=sample1', createdAt: new Date().toISOString() },
-                { id: Date.now() + 11, title: 'Poetry Analysis', description: 'Literature poetry', subject: 'Literature', classLevel: 'SS3', stream: 'Arts', link: 'https://www.youtube.com/watch?v=sample2', createdAt: new Date().toISOString() }
+                { id: Date.now() + 11, title: 'Poetry Analysis', description: 'Literature poetry', subject: 'Literature', classLevel: 'SS3', stream: 'Humanities', link: 'https://www.youtube.com/watch?v=sample2', createdAt: new Date().toISOString() }
             ];
 
             localStorage.setItem('brainwave_books', JSON.stringify(books));
@@ -340,7 +340,7 @@
             
             const quizzes = [
                 { id: Date.now(), type: 'quiz', title: 'Math Quiz', subject: 'Mathematics', classLevel: 'SS2', stream: 'Science', dueDate: futureDate, duration: '30', totalMarks: 50, createdAt: new Date().toISOString() },
-                { id: Date.now() + 1, type: 'quiz', title: 'Literature Quiz', subject: 'Literature', classLevel: 'SS3', stream: 'Arts', dueDate: futureDate, duration: '45', totalMarks: 60, createdAt: new Date().toISOString() }
+                { id: Date.now() + 1, type: 'quiz', title: 'Literature Quiz', subject: 'Literature', classLevel: 'SS3', stream: 'Humanities', dueDate: futureDate, duration: '45', totalMarks: 60, createdAt: new Date().toISOString() }
             ];
 
             const assignments = [

@@ -529,7 +529,7 @@ class AdminDashboard {
         const subjectNames = {
             'mathematics': 'Mathematics',
             'english': 'English Language',
-            'civic': 'Civic Education',
+            'civic': 'Citizenship and Heritage Studies',
             'physics': 'Physics',
             'chemistry': 'Chemistry',
             'biology': 'Biology',
@@ -540,8 +540,8 @@ class AdminDashboard {
             'accounts': 'Accounts',
             'crs': 'Christian Religious Studies',
             'jamb-science': 'JAMB Science Combination',
-            'jamb-arts': 'JAMB Arts Combination',
-            'jamb-commercial': 'JAMB Commercial Combination'
+            'jamb-arts': 'JAMB Humanities Combination',
+            'jamb-commercial': 'JAMB Business Combination'
         };
         
         return subjectNames[subjectId] || subjectId;
@@ -879,8 +879,8 @@ class AdminDashboard {
                         style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;">
                         <option value="General" ${subjectData.stream === 'General' ? 'selected' : ''}>General</option>
                         <option value="Science" ${subjectData.stream === 'Science' ? 'selected' : ''}>Science</option>
-                        <option value="Arts" ${subjectData.stream === 'Arts' ? 'selected' : ''}>Arts</option>
-                        <option value="Commerce" ${subjectData.stream === 'Commerce' ? 'selected' : ''}>Commerce</option>
+                        <option value="Humanities" ${subjectData.stream === 'Humanities' ? 'selected' : ''}>Humanities</option>
+                        <option value="Business" ${subjectData.stream === 'Business' ? 'selected' : ''}>Business</option>
                         <option value="JAMB" ${subjectData.stream === 'JAMB' ? 'selected' : ''}>JAMB</option>
                     </select>
                 </div>
@@ -1051,8 +1051,8 @@ class AdminDashboard {
                         <option value="">Select Stream</option>
                         <option value="General">General</option>
                         <option value="Science">Science</option>
-                        <option value="Arts">Arts</option>
-                        <option value="Commerce">Commerce</option>
+                        <option value="Humanities">Humanities</option>
+                        <option value="Business">Business</option>
                         <option value="JAMB">JAMB</option>
                     </select>
                 </div>
@@ -1431,8 +1431,8 @@ class AdminDashboard {
         const subjectGroups = {
             'General': [],
             'Science': [],
-            'Arts': [],
-            'Commerce': [],
+            'Humanities': [],
+            'Business': [],
             'Multi-Stream': [],
             'JAMB': []
         };
@@ -1472,11 +1472,11 @@ class AdminDashboard {
 
     addDefaultSubjectsToDropdown(subjectSelect) {
         const defaultSubjects = [
-            { group: 'General Subjects', subjects: ['Mathematics', 'English Language', 'Civic Education'] },
+            { group: 'General Subjects', subjects: ['Mathematics', 'English Language', 'Citizenship and Heritage Studies'] },
             { group: 'Science Stream', subjects: ['Physics', 'Chemistry'] },
             { group: 'Multi-Stream', subjects: ['Biology', 'Economics'] },
-            { group: 'Arts Stream', subjects: ['Literature-in-English', 'Government', 'CRS'] },
-            { group: 'Commerce Stream', subjects: ['Commerce', 'Accounts'] }
+            { group: 'Humanities Stream', subjects: ['Literature-in-English', 'Government', 'CRS'] },
+            { group: 'Business Stream', subjects: ['Commerce', 'Accounts'] }
         ];
 
         defaultSubjects.forEach(group => {
@@ -1540,8 +1540,8 @@ class AdminDashboard {
                         <option value="">Select Stream</option>
                         <option value="General">General</option>
                         <option value="Science">Science</option>
-                        <option value="Arts">Arts</option>
-                        <option value="Commerce">Commerce</option>
+                        <option value="Humanities">Humanities</option>
+                        <option value="Business">Business</option>
                         <option value="Multi-Stream">Multi-Stream</option>
                         <option value="JAMB">JAMB</option>
                     </select>
@@ -2112,7 +2112,7 @@ class AdminDashboard {
         } else {
             // Use default subjects if no stored subjects
             subjects = [
-                'Mathematics', 'English Language', 'Civic Education',
+                'Mathematics', 'English Language', 'Citizenship and Heritage Studies',
                 'Physics', 'Chemistry', 'Biology', 'Economics',
                 'Literature-in-English', 'Government', 'CRS',
                 'Commerce', 'Accounts'
@@ -2252,9 +2252,9 @@ class AdminDashboard {
         // If no stored subjects found, use default subjects
         if (filteredSubjects.length === 0) {
             const defaultSubjects = {
-                'SS1': ['Mathematics', 'English Language', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
-                'SS2': ['Mathematics', 'English Language', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
-                'SS3': ['Mathematics', 'English Language', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
+                'SS1': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
+                'SS2': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
+                'SS3': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
                 'JAMB': ['Mathematics', 'English Language', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce']
             };
             
@@ -2805,7 +2805,7 @@ class AdminDashboard {
 
     populateLiveClassSubjectFilters() {
         const subjects = [
-            'Mathematics', 'English Language', 'Civic Education',
+            'Mathematics', 'English Language', 'Citizenship and Heritage Studies',
             'Physics', 'Chemistry', 'Biology', 'Economics',
             'Literature-in-English', 'Government', 'CRS',
             'Commerce', 'Accounts'
@@ -2844,9 +2844,9 @@ class AdminDashboard {
         if (!classLevel) return;
         
         const allSubjects = {
-            'SS1': ['Mathematics', 'English Language', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
-            'SS2': ['Mathematics', 'English Language', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
-            'SS3': ['Mathematics', 'English Language', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
+            'SS1': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
+            'SS2': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
+            'SS3': ['Mathematics', 'English Language', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce', 'Accounts'],
             'JAMB': ['Mathematics', 'English Language', 'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature-in-English', 'Government', 'CRS', 'Commerce']
         };
         
@@ -3079,7 +3079,7 @@ class AdminDashboard {
         ];
         
         const classes = ['SS1', 'SS2', 'SS3'];
-        const streams = ['Science', 'Arts', 'Commerce'];
+        const streams = ['Science', 'Humanities', 'Business'];
         
         this.studentScores = names.map((name, index) => ({
             id: Date.now() + index,
@@ -3184,7 +3184,7 @@ class AdminDashboard {
         const classLevel = prompt('Enter class level (SS1/SS2/SS3/JAMB):', 'SS1');
         if (!classLevel) return;
 
-        const stream = prompt('Enter stream (Science/Arts/Commerce):', 'Science');
+        const stream = prompt('Enter stream (Science/Humanities/Business):', 'Science');
         if (!stream) return;
 
         const student = {
@@ -3375,8 +3375,8 @@ class AdminDashboard {
                         <select onchange="window.adminDashboard.updateStudentField(${student.id}, 'stream', this.value)"
                             style="padding: 0.25rem 0.5rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: var(--gray-200); color: var(--gray-700); cursor: pointer;">
                             <option value="Science" ${student.stream === 'Science' ? 'selected' : ''}>Science</option>
-                            <option value="Arts" ${student.stream === 'Arts' ? 'selected' : ''}>Arts</option>
-                            <option value="Commerce" ${student.stream === 'Commerce' ? 'selected' : ''}>Commerce</option>
+                            <option value="Humanities" ${student.stream === 'Humanities' ? 'selected' : ''}>Humanities</option>
+                            <option value="Business" ${student.stream === 'Business' ? 'selected' : ''}>Business</option>
                         </select>
                     </td>
                     ${currentSubjects.map(subject => {
@@ -3532,8 +3532,8 @@ class AdminDashboard {
                         <select onchange="window.adminDashboard.updateStudentField(${student.id}, 'stream', this.value)"
                             style="padding: 0.25rem 0.5rem; border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.75rem; font-weight: 600; background: var(--gray-200); color: var(--gray-700); cursor: pointer;">
                             <option value="Science" ${student.stream === 'Science' ? 'selected' : ''}>Science</option>
-                            <option value="Arts" ${student.stream === 'Arts' ? 'selected' : ''}>Arts</option>
-                            <option value="Commerce" ${student.stream === 'Commerce' ? 'selected' : ''}>Commerce</option>
+                            <option value="Humanities" ${student.stream === 'Humanities' ? 'selected' : ''}>Humanities</option>
+                            <option value="Business" ${student.stream === 'Business' ? 'selected' : ''}>Business</option>
                         </select>
                     </td>
                     <td style="padding: 0.75rem; text-align: center;">
@@ -3703,27 +3703,27 @@ class AdminDashboard {
         // Define subject combinations based on stream and class
         const subjectCombinations = {
             'Science': {
-                'SS1': ['English Language', 'Mathematics', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics'],
-                'SS2': ['English Language', 'Mathematics', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics'],
-                'SS3': ['English Language', 'Mathematics', 'Civic Education', 'Physics', 'Chemistry', 'Biology', 'Economics'],
+                'SS1': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics'],
+                'SS2': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics'],
+                'SS3': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Physics', 'Chemistry', 'Biology', 'Economics'],
                 'JAMB': ['English Language', 'Mathematics', 'Physics', 'Chemistry', 'Biology', 'Economics']
             },
-            'Arts': {
-                'SS1': ['English Language', 'Mathematics', 'Civic Education', 'Literature-in-English', 'Government', 'Biology', 'Economics'],
-                'SS2': ['English Language', 'Mathematics', 'Civic Education', 'Literature-in-English', 'Government', 'Biology', 'Economics'],
-                'SS3': ['English Language', 'Mathematics', 'Civic Education', 'Literature-in-English', 'Government', 'Biology', 'Economics'],
+            'Humanities': {
+                'SS1': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Literature-in-English', 'Government', 'Biology', 'Economics'],
+                'SS2': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Literature-in-English', 'Government', 'Biology', 'Economics'],
+                'SS3': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Literature-in-English', 'Government', 'Biology', 'Economics'],
                 'JAMB': ['English Language', 'Mathematics', 'Literature-in-English', 'Government', 'Economics', 'CRS']
             },
-            'Commerce': {
-                'SS1': ['English Language', 'Mathematics', 'Civic Education', 'Commerce', 'Accounts', 'Biology', 'Economics'],
-                'SS2': ['English Language', 'Mathematics', 'Civic Education', 'Commerce', 'Accounts', 'Biology', 'Economics'],
-                'SS3': ['English Language', 'Mathematics', 'Civic Education', 'Commerce', 'Accounts', 'Biology', 'Economics'],
+            'Business': {
+                'SS1': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Commerce', 'Accounts', 'Biology', 'Economics'],
+                'SS2': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Commerce', 'Accounts', 'Biology', 'Economics'],
+                'SS3': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies', 'Commerce', 'Accounts', 'Biology', 'Economics'],
                 'JAMB': ['English Language', 'Mathematics', 'Economics', 'Commerce', 'Accounts']
             },
             'General': {
-                'SS1': ['English Language', 'Mathematics', 'Civic Education'],
-                'SS2': ['English Language', 'Mathematics', 'Civic Education'],
-                'SS3': ['English Language', 'Mathematics', 'Civic Education'],
+                'SS1': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies'],
+                'SS2': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies'],
+                'SS3': ['English Language', 'Mathematics', 'Citizenship and Heritage Studies'],
                 'JAMB': ['English Language', 'Mathematics']
             }
         };

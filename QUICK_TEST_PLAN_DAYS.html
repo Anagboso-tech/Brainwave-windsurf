@@ -303,13 +303,13 @@
                     if (daysRemaining > 0) {
                         const color = daysRemaining <= 2 ? '#f59e0b' : '#10b981';
                         return {
-                            text: `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} left in trial`,
+                            text: `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} left in bootcamp`,
                             color: color,
                             type: daysRemaining <= 2 ? 'warning' : 'safe'
                         };
                     } else {
                         return {
-                            text: 'Trial expired',
+                            text: 'Bootcamp expired',
                             color: '#ef4444',
                             type: 'urgent'
                         };

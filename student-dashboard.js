@@ -759,7 +759,7 @@ function updateStudentInfo() {
         daysDisplay.style.display = 'none';
     }
     
-    // Update student code
+    // Update student code (top bar)
     const codeDisplay = document.getElementById('studentCodeDisplay');
     if (currentStudent.studentCode) {
         codeDisplay.textContent = currentStudent.studentCode;
@@ -769,10 +769,52 @@ function updateStudentInfo() {
         codeDisplay.style.color = 'var(--gray-600)';
     }
     
+    // Update student code in dropdown (for mobile)
+    const dropdownCodeElement = document.getElementById('dropdownCode');
+    const dropdownCodeText = document.getElementById('dropdownCodeText');
+    if (dropdownCodeElement && dropdownCodeText && currentStudent.studentCode) {
+        dropdownCodeText.textContent = currentStudent.studentCode;
+        dropdownCodeElement.style.display = 'flex';
+    }
+    
     // Update welcome message
     const welcomeNameElement = document.getElementById('welcomeStudentName');
     if (welcomeNameElement) {
         welcomeNameElement.textContent = currentStudent.name.split(' ')[0]; // Use first name
+    }
+    
+    // Update payment badge
+    const paymentBadge = document.getElementById('dropdownPaymentBadge');
+    const paymentText = document.getElementById('dropdownPaymentText');
+    const paymentIcon = paymentBadge?.querySelector('.paid-badge-icon');
+    
+    if (paymentBadge && paymentText) {
+        const isPaid = currentStudent.isPaid || currentStudent.paymentStatus === 'paid';
+        
+        if (isPaid) {
+            paymentBadge.className = 'dropdown-payment-badge paid';
+            paymentText.textContent = 'Paid Member';
+            if (paymentIcon) {
+                paymentIcon.className = 'fas fa-check-circle paid-badge-icon';
+            }
+        } else {
+            paymentBadge.className = 'dropdown-payment-badge bootcamp';
+            paymentText.textContent = 'Bootcamp';
+            if (paymentIcon) {
+                paymentIcon.className = 'fas fa-graduation-cap paid-badge-icon';
+            }
+        }
+    }
+    
+    // Update upgrade button visibility
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    if (upgradeBtn) {
+        const isPaid = currentStudent.isPaid || currentStudent.paymentStatus === 'paid';
+        if (isPaid) {
+            upgradeBtn.style.display = 'none';
+        } else {
+            upgradeBtn.style.display = 'flex';
+        }
     }
 }
 
@@ -792,13 +834,13 @@ function calculateDaysRemaining(student) {
                 const color = daysRemaining <= 2 ? '#f59e0b' : '#10b981';
                 const textColor = '#ffffff';
                 return {
-                    text: `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} left in trial`,
+                    text: `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} left in bootcamp`,
                     color: color,
                     textColor: textColor
                 };
             } else {
                 return {
-                    text: 'Trial expired',
+                    text: 'Bootcamp expired',
                     color: '#ef4444',
                     textColor: '#ffffff'
                 };
@@ -839,11 +881,19 @@ function calculateDaysRemaining(student) {
 }
 
 function getInitials(name) {
-    const parts = name.split(' ');
+    if (!name || name.trim() === '') return 'ST';
+    
+    const parts = name.trim().split(' ').filter(part => part.length > 0);
+    
     if (parts.length >= 2) {
-        return (parts[0][0] + parts[1][0]).toUpperCase();
+        // Get first letter of first name and first letter of last name
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    } else if (parts.length === 1) {
+        // Single name: take first 2 letters
+        return parts[0].substring(0, 2).toUpperCase();
     }
-    return name.substring(0, 2).toUpperCase();
+    
+    return 'ST';
 }
 
 function logout() {
@@ -1032,20 +1082,63 @@ function openUpgradeModal() {
     // Close dropdown
     document.getElementById('dropdownMenu').classList.remove('show');
     
-    // Prepare payment data
-    const paymentData = {
-        type: 'upgrade',
-        childName: currentStudent.name || 'Student',
-        currentPlan: currentStudent.plan || 'free',
-        parentName: currentStudent.parentName || 'Parent',
-        parentEmail: currentStudent.parentEmail || currentStudent.email || 'parent@email.com'
-    };
+    // Show confirmation dialog
+    const confirmed = confirm(
+        '🎓 Upgrade to Paid Membership\n\n' +
+        'By upgrading, you will get:\n' +
+        '✓ Access to all premium content\n' +
+        '✓ Unlimited quizzes and exams\n' +
+        '✓ Exclusive live classes\n' +
+        '✓ Premium ebooks and materials\n\n' +
+        'Click OK to simulate payment and upgrade your account.'
+    );
     
-    // Store payment data in session storage
-    sessionStorage.setItem('brainwave_payment_data', JSON.stringify(paymentData));
+    if (confirmed) {
+        // Simulate payment success
+        upgradeToPayment();
+    }
+}
+
+function upgradeToPayment() {
+    // Update student payment status
+    currentStudent.isPaid = true;
+    currentStudent.paymentStatus = 'paid';
+    currentStudent.paidDate = new Date().toISOString().split('T')[0];
+    currentStudent.status = 'active';
+    currentStudent.plan = 'paid';
     
-    // Redirect to payment gateway
-    window.location.href = 'payment-gateway.html';
+    // Add to plan history
+    if (!currentStudent.planHistory) {
+        currentStudent.planHistory = [];
+    }
+    currentStudent.planHistory.push({
+        from: 'bootcamp',
+        to: 'paid',
+        changedAt: new Date().toISOString(),
+        changedBy: 'student_upgrade'
+    });
+    
+    // Save to localStorage
+    const users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
+    const index = users.findIndex(u => u.id === currentStudent.id);
+    if (index !== -1) {
+        users[index] = currentStudent;
+        localStorage.setItem('brainwave_users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify(currentStudent));
+        
+        console.log('✅ Student upgraded to paid:', currentStudent);
+        
+        // Update UI
+        updateStudentInfo();
+        
+        // Show success message
+        showToast('🎉 Congratulations! You are now a paid member!', 'success');
+        
+        // Reload content to show paid materials
+        setTimeout(() => {
+            loadDashboardData();
+        }, 1000);
+    }
 }
 
 function saveProfile(e) {
@@ -1185,8 +1278,8 @@ function getFilteredSubjects() {
 function getSubjectColor(stream) {
     const colors = {
         'Science': '#dbeafe',
-        'Arts': '#fce7f3',
-        'Commercial': '#fef3c7',
+        'Humanities': '#fce7f3',
+        'Business': '#fef3c7',
         'General': '#e0e7ff',
         'Multi-Stream': '#ddd6fe'
     };
@@ -1323,7 +1416,7 @@ function getFilteredLiveClasses() {
                 subject: 'Economics',
                 teacher: 'Prof. Grace Adebayo',
                 classLevel: classLevel,
-                stream: 'Commercial',
+                stream: 'Business',
                 date: nextWeek.toISOString(),
                 time: '1:00 PM',
                 status: 'scheduled',
@@ -1348,7 +1441,12 @@ function getFilteredLiveClasses() {
         const streamMatch = liveClass.stream === currentStudent.stream || 
                            liveClass.stream === 'All Streams';
         
-        return classMatch && streamMatch;
+        // Payment-based filtering
+        const isPaid = currentStudent.isPaid || currentStudent.paymentStatus === 'paid';
+        const accessLevel = liveClass.accessLevel || 'bootcamp';
+        const accessMatch = isPaid || accessLevel === 'bootcamp';
+        
+        return classMatch && streamMatch && accessMatch;
     });
 }
 
@@ -1729,7 +1827,7 @@ function getFilteredAssessments(type) {
                     title: 'JAMB Economics Practice Test',
                     subject: 'Economics',
                     classLevel: classLevel,
-                    stream: 'Commercial',
+                    stream: 'Business',
                     dueDate: nextMonth.toISOString(),
                     duration: '85',
                     totalMarks: 100,
@@ -1761,7 +1859,15 @@ function getFilteredAssessments(type) {
                            assessment.stream === 'All Streams' ||
                            !assessment.stream; // Show if no stream specified
         
-        const result = typeMatch && (classMatch || streamMatch);
+        // Payment-based filtering
+        const isPaid = currentStudent.isPaid || currentStudent.paymentStatus === 'paid';
+        const accessLevel = assessment.accessLevel || 'bootcamp'; // Default to bootcamp if not specified
+        
+        // If student is paid, they can access everything
+        // If student is bootcamp, they can only access bootcamp content
+        const accessMatch = isPaid || accessLevel === 'bootcamp';
+        
+        const result = typeMatch && (classMatch || streamMatch) && accessMatch;
         
         if (!result) {
             console.log(`❌ Filtered out:`, {
@@ -1769,18 +1875,22 @@ function getFilteredAssessments(type) {
                 type: assessment.type,
                 classLevel: assessment.classLevel,
                 stream: assessment.stream,
+                accessLevel: accessLevel,
                 studentClass: currentStudent.classLevel,
                 studentStream: currentStudent.stream,
+                studentPaid: isPaid,
                 typeMatch,
                 classMatch,
-                streamMatch
+                streamMatch,
+                accessMatch
             });
         } else {
             console.log(`✅ Included:`, {
                 title: assessment.title,
                 type: assessment.type,
                 classLevel: assessment.classLevel,
-                stream: assessment.stream
+                stream: assessment.stream,
+                accessLevel: accessLevel
             });
         }
         
@@ -1972,7 +2082,7 @@ function getFilteredBooks() {
                 thumbnail: 'https://via.placeholder.com/300x400/8b5cf6/ffffff?text=English+Book',
                 pages: 350,
                 author: 'Ms. Jennifer Williams',
-                publisher: 'Language Arts Press',
+                publisher: 'Language Humanities Press',
                 createdAt: now.toISOString()
             },
             {
@@ -1980,7 +2090,7 @@ function getFilteredBooks() {
                 title: 'Economics Principles',
                 subject: 'Economics',
                 classLevel: classLevel,
-                stream: 'Commercial',
+                stream: 'Business',
                 description: 'Introduction to microeconomics and macroeconomics concepts.',
                 link: 'https://drive.google.com/file/sample-economics-book',
                 thumbnail: 'https://via.placeholder.com/300x400/ef4444/ffffff?text=Economics+Book',
@@ -2032,7 +2142,12 @@ function getFilteredBooks() {
         const streamMatch = book.stream === currentStudent.stream || 
                            book.stream === 'All Streams';
         
-        return classMatch && streamMatch;
+        // Payment-based filtering
+        const isPaid = currentStudent.isPaid || currentStudent.paymentStatus === 'paid';
+        const accessLevel = book.accessLevel || 'bootcamp';
+        const accessMatch = isPaid || accessLevel === 'bootcamp';
+        
+        return classMatch && streamMatch && accessMatch;
     });
 }
 
@@ -2130,7 +2245,7 @@ function getFilteredVideos() {
                 title: 'Economics Fundamentals',
                 subject: 'Economics',
                 classLevel: classLevel,
-                stream: 'Commercial',
+                stream: 'Business',
                 description: 'Introduction to microeconomics and macroeconomics concepts.',
                 link: 'https://www.youtube.com/watch?v=example-economics',
                 duration: '41:25',
@@ -2192,7 +2307,12 @@ function getFilteredVideos() {
         const streamMatch = video.stream === currentStudent.stream || 
                            video.stream === 'All Streams';
         
-        return classMatch && streamMatch;
+        // Payment-based filtering
+        const isPaid = currentStudent.isPaid || currentStudent.paymentStatus === 'paid';
+        const accessLevel = video.accessLevel || 'bootcamp';
+        const accessMatch = isPaid || accessLevel === 'bootcamp';
+        
+        return classMatch && streamMatch && accessMatch;
     });
 }
 
