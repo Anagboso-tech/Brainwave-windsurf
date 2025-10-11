@@ -664,42 +664,26 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Copy Protection Styles */
+        /* Allow screenshots and copying - No restrictions */
         .no-copy-zone {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+            -webkit-touch-callout: default;
             cursor: default;
             position: relative;
         }
         
         .no-copy-zone * {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
         
         .no-copy-zone .material-button {
             cursor: pointer;
-        }
-        
-        /* Subtle protection indicator */
-        .no-copy-zone::after {
-            content: '🔒';
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            font-size: 0.75rem;
-            opacity: 0.3;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-        
-        .no-copy-zone:hover::after {
-            opacity: 0.6;
         }
 
         /* Material Viewer Modal */
