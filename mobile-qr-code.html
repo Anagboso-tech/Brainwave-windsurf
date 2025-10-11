@@ -3,7 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Brainwave Mobile Access - QR Code</title>
+    <style>
+        /* Allow screenshots and screen recording */
+        * {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+        
+        /* Remove any potential screenshot blocking */
+        html, body {
+            -webkit-touch-callout: default !important;
+            -webkit-user-select: text !important;
+            -khtml-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+    </style>
     <style>
         * {
             margin: 0;
@@ -154,7 +174,7 @@
         </div>
 
         <div class="url-display" id="urlDisplay">
-            http://10.138.189.121:8000
+            http://10.21.214.121:8000
         </div>
 
         <button class="copy-btn" onclick="copyUrl()">📋 Copy URL</button>
@@ -171,22 +191,48 @@
         </div>
     </div>
 
-    <!-- QR Code Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+    <!-- QR Code Library - with timeout fallback -->
     <script>
         // Get local IP and generate QR code
-        const url = 'http://10.138.189.121:8000';
+        const url = 'http://10.21.214.121:8000';
         
-        // Generate QR Code
-        new QRCode(document.getElementById("qrcode"), {
-            text: url,
-            width: 256,
-            height: 256,
-            colorDark: "#1e3a8a",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
+        // Show loading message
+        document.getElementById("qrcode").innerHTML = '<p style="color: #1e3a8a; padding: 20px;">Loading QR Code...</p>';
+        
+        // Load QR Code library with timeout
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        script.async = true;
+        
+        let qrCodeGenerated = false;
+        
+        script.onload = function() {
+            if (!qrCodeGenerated) {
+                qrCodeGenerated = true;
+                document.getElementById("qrcode").innerHTML = '';
+                new QRCode(document.getElementById("qrcode"), {
+                    text: url,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#1e3a8a",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+        };
+        
+        script.onerror = function() {
+            document.getElementById("qrcode").innerHTML = '<p style="color: #1e3a8a; padding: 20px;">⚠️ QR Code failed to load.<br>Please use the URL below.</p>';
+        };
+        
+        // Timeout fallback after 5 seconds
+        setTimeout(function() {
+            if (!qrCodeGenerated) {
+                document.getElementById("qrcode").innerHTML = '<p style="color: #1e3a8a; padding: 20px;">⏱️ QR Code taking too long.<br>Please use the URL below.</p>';
+            }
+        }, 5000);
+        
+        document.head.appendChild(script);
 
         // Copy URL function
         function copyUrl() {
@@ -212,6 +258,33 @@
         // Auto-detect and update IP if needed
         console.log('🚀 Brainwave Mobile Access Ready!');
         console.log('📱 URL:', url);
+        
+        // Ensure screenshots are allowed - remove any blocking event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Remove any context menu blocking
+            document.oncontextmenu = null;
+            document.onselectstart = null;
+            document.ondragstart = null;
+            
+            // Enable text selection and right-click
+            document.body.style.webkitUserSelect = 'text';
+            document.body.style.mozUserSelect = 'text';
+            document.body.style.msUserSelect = 'text';
+            document.body.style.userSelect = 'text';
+            
+            // Remove any screenshot blocking attributes
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                element.style.webkitUserSelect = 'text';
+                element.style.mozUserSelect = 'text';
+                element.style.msUserSelect = 'text';
+                element.style.userSelect = 'text';
+                
+                // Remove any data attributes that might block screenshots
+                element.removeAttribute('data-no-screenshot');
+                element.removeAttribute('data-screenshot-block');
+            });
+        });
     </script>
 </body>
 </html>
