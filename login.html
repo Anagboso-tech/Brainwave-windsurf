@@ -42,9 +42,11 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { auth, signInWithEmailAndPassword, checkAccountStatus, getDoc, doc, db } from './firebase-config.js';
+
         // Handle login form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
@@ -56,91 +58,88 @@
                 return;
             }
             
-            // Simulate login process
             showLoading();
             
-            // In a real application, this would make an API call to authenticate
-            setTimeout(() => {
-                // Get users from localStorage to check role
-                let users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
-                const userIndex = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+            try {
+                // Sign in with Firebase Authentication
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
                 
-                if (userIndex === -1) {
+                console.log('✅ User authenticated:', user.uid);
+                
+                // Check if email is verified
+                if (!user.emailVerified) {
                     hideLoading();
-                    alert('No account found with this email. Please sign up first.');
+                    await auth.signOut();
+                    alert('❌ Please verify your email address before logging in. Check your inbox for the verification link.');
                     return;
                 }
                 
-                const user = users[userIndex];
+                // Check account status (locked/expired)
+                const statusCheck = await checkAccountStatus(user.uid);
                 
-                // In production, verify password hash here
-                // For now, we accept any password for demo purposes
-                
-                // Check and auto-lock expired accounts
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                
-                if (user.expiry || user.expiryDate) {
-                    const expiryDate = new Date(user.expiry || user.expiryDate);
-                    expiryDate.setHours(0, 0, 0, 0);
-                    
-                    // If expiry date has passed, automatically lock the account
-                    if (expiryDate < today && !user.locked) {
-                        user.locked = true;
-                        user.accountLocked = true;
-                        user.status = 'expired';
-                        user.lockedReason = 'Subscription expired';
-                        user.lockedAt = new Date().toISOString();
-                        
-                        // Update in storage
-                        users[userIndex] = user;
-                        localStorage.setItem('brainwave_users', JSON.stringify(users));
-                        localStorage.setItem('users', JSON.stringify(users));
-                        
-                        console.log(`🔒 Account auto-locked: ${user.email} (Expired: ${user.expiry || user.expiryDate})`);
-                    }
-                }
-                
-                // Check if account is locked
-                if (user.locked || user.accountLocked) {
+                if (!statusCheck.valid) {
                     hideLoading();
-                    const reason = user.lockedReason || 'Your account has been locked';
-                    alert(`${reason}. Please contact the administrator or renew your subscription.`);
+                    await auth.signOut();
+                    alert(statusCheck.reason + '. Please contact the administrator or renew your subscription.');
                     return;
                 }
                 
-                // Check subscription status
-                if (user.status === 'expired') {
+                // Get user data from Firestore
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                
+                if (!userDoc.exists()) {
                     hideLoading();
-                    alert('Your subscription has expired. Please renew to continue.');
+                    await auth.signOut();
+                    alert('User data not found. Please contact support.');
                     return;
                 }
                 
-                // Store user session data with complete user object
+                const userData = userDoc.data();
+                
+                // Store user session data
                 const userSession = {
-                    id: user.id,
-                    name: user.name,
+                    uid: user.uid,
                     email: user.email,
-                    role: user.role,
+                    name: userData.name,
+                    role: userData.role,
                     isLoggedIn: true,
                     loginTime: new Date().toISOString()
                 };
+                
                 localStorage.setItem('currentUser', JSON.stringify(userSession));
                 sessionStorage.setItem('userData', JSON.stringify(userSession));
                 
+                console.log('✅ Login successful. Role:', userData.role);
+                
                 // Redirect based on user role
-                if (user.role === 'student') {
-                    // Store student ID for dashboard
-                    localStorage.setItem('brainwave_current_student_id', user.id);
+                if (userData.role === 'student') {
                     window.location.href = 'student-dashboard.html';
-                } else if (user.role === 'parent') {
-                    // Store current user and redirect to parent dashboard
+                } else if (userData.role === 'parent') {
                     window.location.href = 'parent-dashboard.html';
-                } else {
-                    // Default to admin dashboard
+                } else if (userData.role === 'admin') {
                     window.location.href = 'admin-dashboard.html';
+                } else {
+                    window.location.href = 'student-dashboard.html';
                 }
-            }, 1000);
+                
+            } catch (error) {
+                hideLoading();
+                console.error('Login error:', error);
+                
+                // Handle specific Firebase errors
+                if (error.code === 'auth/user-not-found') {
+                    alert('No account found with this email. Please sign up first.');
+                } else if (error.code === 'auth/wrong-password') {
+                    alert('Incorrect password. Please try again.');
+                } else if (error.code === 'auth/invalid-email') {
+                    alert('Invalid email address.');
+                } else if (error.code === 'auth/too-many-requests') {
+                    alert('Too many failed login attempts. Please try again later.');
+                } else {
+                    alert('Login failed: ' + error.message);
+                }
+            }
         });
 
         // Loading functions
@@ -155,7 +154,6 @@
             submitBtn.textContent = 'Log In';
             submitBtn.disabled = false;
         }
-
     </script>
 </body>
 </html>

@@ -1,5 +1,200 @@
 // BrainWave Student Dashboard JavaScript
 
+// ==================== FIREBASE AUTHENTICATION & DATA ====================
+
+// Import Firebase modules
+import { checkAuth, logout } from './auth-guard.js';
+import { 
+    getUserById,
+    updateUser,
+    getStudentProgress, 
+    getAssessments, 
+    getStudyMaterials, 
+    getLiveClasses,
+    getActiveAnnouncements,
+    getStudentSubmissions 
+} from './database-operations.js';
+
+// Global user data
+let currentUser = null;
+let isFirebaseDataLoaded = false;
+
+// Check authentication in background (non-blocking)
+setTimeout(() => {
+    checkAuth('student').then(userData => {
+        currentUser = userData;
+        console.log('✅ Authenticated as:', currentUser.name);
+        console.log('Student Code:', currentUser.studentCode);
+        console.log('Class Level:', currentUser.classLevel);
+        console.log('Stream:', currentUser.stream);
+        
+        // Update UI with user info
+        updateUserProfile(currentUser);
+        
+        // Load Firebase data in background
+        loadFirebaseData().then(() => {
+            isFirebaseDataLoaded = true;
+            console.log('✅ Firebase data loaded');
+        }).catch(error => {
+            console.warn('⚠️ Firebase data load failed, using mock data');
+        });
+    }).catch(error => {
+        console.error('❌ Authentication failed:', error);
+        // User will be redirected by checkAuth
+    });
+}, 100); // Small delay to let dashboard load first
+
+// Update user profile in UI
+function updateUserProfile(userData) {
+    console.log('🔄 Updating UI with user data:', userData);
+    
+    // Update welcome message with student name
+    const welcomeNameEl = document.getElementById('welcomeStudentName');
+    if (welcomeNameEl) {
+        welcomeNameEl.textContent = userData.name;
+        console.log('✅ Updated welcome name:', userData.name);
+    }
+    
+    // Update dropdown name
+    const dropdownNameEl = document.getElementById('dropdownName');
+    if (dropdownNameEl) {
+        dropdownNameEl.textContent = userData.name;
+        console.log('✅ Updated dropdown name:', userData.name);
+    }
+    
+    // Update dropdown email
+    const dropdownEmailEl = document.getElementById('dropdownEmail');
+    if (dropdownEmailEl) {
+        dropdownEmailEl.textContent = userData.email;
+        console.log('✅ Updated dropdown email:', userData.email);
+    }
+    
+    // Update student code in top bar
+    const studentCodeDisplayEl = document.getElementById('studentCodeDisplay');
+    if (studentCodeDisplayEl) {
+        studentCodeDisplayEl.textContent = userData.studentCode || 'N/A';
+        console.log('✅ Updated student code display:', userData.studentCode);
+    }
+    
+    // Update student code in dropdown
+    const dropdownCodeTextEl = document.getElementById('dropdownCodeText');
+    if (dropdownCodeTextEl) {
+        dropdownCodeTextEl.textContent = userData.studentCode || 'N/A';
+        console.log('✅ Updated dropdown code:', userData.studentCode);
+    }
+    
+    // Update avatar initials
+    const avatarInitialsEl = document.getElementById('avatarInitials');
+    if (avatarInitialsEl && userData.name) {
+        const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        avatarInitialsEl.textContent = initials;
+        console.log('✅ Updated avatar initials:', initials);
+    }
+    
+    // Update payment/subscription status in dropdown
+    const dropdownPaymentTextEl = document.getElementById('dropdownPaymentText');
+    if (dropdownPaymentTextEl) {
+        dropdownPaymentTextEl.textContent = userData.status === 'bootcamp' ? 'Bootcamp (7 Days Free)' : 'Active';
+    }
+    
+    // Update plan in dropdown
+    const dropdownPlanEl = document.getElementById('dropdownPlan');
+    if (dropdownPlanEl) {
+        dropdownPlanEl.textContent = userData.plan === 'bootcamp' ? 'Bootcamp Trial' : `${userData.plan} Plan`;
+    }
+    
+    // Update days remaining if bootcamp
+    const dropdownDaysEl = document.getElementById('dropdownDays');
+    if (dropdownDaysEl && userData.expiryDate) {
+        const expiryDate = new Date(userData.expiryDate);
+        const today = new Date();
+        const daysLeft = Math.ceil((expiryDate - today) / (1000 * 60 * 60 * 24));
+        if (daysLeft > 0) {
+            dropdownDaysEl.textContent = `${daysLeft} days remaining`;
+            dropdownDaysEl.style.display = 'block';
+        }
+    }
+    
+    // Update all other student name elements
+    const nameElements = document.querySelectorAll('.student-name, #studentName, .user-name');
+    nameElements.forEach(el => {
+        if (el) el.textContent = userData.name;
+    });
+    
+    // Update all other student code elements
+    const codeElements = document.querySelectorAll('.student-code, #studentCode');
+    codeElements.forEach(el => {
+        if (el) el.textContent = userData.studentCode || 'N/A';
+    });
+    
+    // Update class level
+    const levelElements = document.querySelectorAll('.class-level, #classLevel');
+    levelElements.forEach(el => {
+        if (el) el.textContent = userData.classLevel || 'N/A';
+    });
+    
+    // Update stream
+    const streamElements = document.querySelectorAll('.stream, #stream');
+    streamElements.forEach(el => {
+        if (el) el.textContent = userData.stream || 'N/A';
+    });
+    
+    console.log('✅ User profile UI fully updated');
+}
+
+// Load all Firebase data
+async function loadFirebaseData() {
+    try {
+        console.log('📊 Loading Firebase data...');
+        
+        // Load student progress
+        const progress = await getStudentProgress(currentUser.uid);
+        console.log('Progress:', progress);
+        
+        // Load assessments for this student's class
+        const assessments = await getAssessments({
+            classLevel: currentUser.classLevel,
+            stream: currentUser.stream,
+            status: 'available'
+        });
+        console.log('Assessments:', assessments.length);
+        
+        // Load study materials
+        const materials = await getStudyMaterials({
+            classLevel: currentUser.classLevel,
+            stream: currentUser.stream
+        });
+        console.log('Study materials:', materials.length);
+        
+        // Load live classes
+        const liveClasses = await getLiveClasses({
+            classLevel: currentUser.classLevel,
+            status: 'scheduled'
+        });
+        console.log('Live classes:', liveClasses.length);
+        
+        // Load announcements
+        const announcements = await getActiveAnnouncements('student');
+        console.log('Announcements:', announcements.length);
+        
+        // Load student submissions
+        const submissions = await getStudentSubmissions(currentUser.uid);
+        console.log('Submissions:', submissions.length);
+        
+        // Note: Since there's no data in Firebase yet, we'll fall back to mock data
+        // The existing mock data code below will still work
+        
+        console.log('✅ Firebase data loaded (using mock data as fallback)');
+        
+    } catch (error) {
+        console.error('⚠️ Error loading Firebase data:', error);
+        console.log('📦 Falling back to mock data');
+    }
+}
+
+// Make logout available globally
+window.handleLogout = logout;
+
 // ==================== MOBILE DETECTION & COMPATIBILITY ====================
 
 // Detect if running on mobile device
@@ -929,10 +1124,8 @@ function getInitials(name) {
     return 'ST';
 }
 
-function logout() {
-    localStorage.removeItem('brainwave_current_student_id');
-    window.location.href = 'login.html';
-}
+// Logout function is now imported from auth-guard.js
+// Old logout function removed to avoid duplicate declaration
 
 // ==================== EVENT LISTENERS ====================
 
@@ -1096,12 +1289,20 @@ function openEditProfile() {
     // Close dropdown
     document.getElementById('dropdownMenu').classList.remove('show');
     
-    // Populate form with current data
-    document.getElementById('profileName').value = currentStudent.name || '';
-    document.getElementById('profileEmail').value = currentStudent.email || '';
-    document.getElementById('profilePhone').value = currentStudent.phone || '';
-    document.getElementById('profileClass').value = currentStudent.classLevel || '';
-    document.getElementById('profileStream').value = currentStudent.stream || '';
+    // Check if user data is loaded
+    if (!currentUser) {
+        alert('Please wait for profile data to load...');
+        return;
+    }
+    
+    // Populate form with current Firebase data
+    document.getElementById('profileName').value = currentUser.name || '';
+    document.getElementById('profileEmail').value = currentUser.email || '';
+    document.getElementById('profilePhone').value = currentUser.phone || '';
+    document.getElementById('profileClass').value = currentUser.classLevel || '';
+    document.getElementById('profileStream').value = currentUser.stream || '';
+    
+    console.log('📝 Opening edit profile with data:', currentUser);
     
     // Show modal
     document.getElementById('editProfileModal').classList.add('show');
@@ -1174,7 +1375,7 @@ function upgradeToPayment() {
     }
 }
 
-function saveProfile(e) {
+async function saveProfile(e) {
     e.preventDefault();
     
     // Get form values
@@ -1185,37 +1386,56 @@ function saveProfile(e) {
     const stream = document.getElementById('profileStream').value;
     
     // Validate
-    if (!name || !email || !phone || !classLevel || !stream) {
-        showToast('Please fill in all fields', 'error');
+    if (!name || !email || !classLevel || !stream) {
+        showToast('Please fill in all required fields', 'error');
         return;
     }
     
-    // Update student data
-    currentStudent.name = name;
-    currentStudent.email = email;
-    currentStudent.phone = phone;
-    currentStudent.classLevel = classLevel;
-    currentStudent.stream = stream;
-    currentStudent.updatedAt = new Date().toISOString();
-    
-    // Save to localStorage
-    const users = JSON.parse(localStorage.getItem('brainwave_users') || '[]');
-    const index = users.findIndex(u => u.id === currentStudent.id);
-    if (index !== -1) {
-        users[index] = currentStudent;
-        localStorage.setItem('brainwave_users', JSON.stringify(users));
+    // Check if user is loaded
+    if (!currentUser || !currentUser.uid) {
+        showToast('User data not loaded. Please try again.', 'error');
+        return;
     }
     
-    // Update UI
-    updateStudentInfo();
-    
-    // Close modal
-    closeEditProfile();
-    
-    // Reload dashboard data
-    loadDashboardData();
-    
-    showToast('Profile updated successfully!', 'success');
+    try {
+        console.log('💾 Saving profile to Firebase...');
+        
+        // Prepare update data
+        const updateData = {
+            name: name,
+            firstName: name.split(' ')[0],
+            lastName: name.split(' ').slice(1).join(' ') || name.split(' ')[0],
+            phone: phone,
+            classLevel: classLevel,
+            stream: stream
+        };
+        
+        // Update in Firebase
+        await updateUser(currentUser.uid, updateData);
+        
+        // Update local currentUser object
+        currentUser.name = name;
+        currentUser.firstName = updateData.firstName;
+        currentUser.lastName = updateData.lastName;
+        currentUser.phone = phone;
+        currentUser.classLevel = classLevel;
+        currentUser.stream = stream;
+        
+        console.log('✅ Profile updated in Firebase');
+        
+        // Update UI with new data
+        updateUserProfile(currentUser);
+        
+        // Close modal
+        closeEditProfile();
+        
+        // Show success message
+        showToast('Profile updated successfully!', 'success');
+        
+    } catch (error) {
+        console.error('❌ Error saving profile:', error);
+        showToast('Failed to update profile: ' + error.message, 'error');
+    }
 }
 
 // ==================== DATA LOADING ====================

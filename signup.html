@@ -141,6 +141,11 @@
                 <p>Create your account to start learning.</p>
             </div>
             
+            <!-- Error Display -->
+            <div id="errorDisplay" style="display: none; background: #fee; border: 1px solid #fcc; color: #c00; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <strong>⚠️ Error:</strong> <span id="errorMessage"></span>
+            </div>
+            
             <form class="login-form" id="signupForm">
                 <!-- Role Selection -->
                 <div class="form-group">
@@ -259,7 +264,22 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Import Firebase functions at the top
+        import { auth, db, createUserWithEmailAndPassword, sendEmailVerification, setDoc, doc, generateStudentCode, getBootcampExpiryDate, serverTimestamp } from './firebase-config.js';
+        
+        console.log('✅ Firebase module loaded');
+
+        // Wait for DOM to be fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSignup);
+        } else {
+            initializeSignup();
+        }
+
+        function initializeSignup() {
+            console.log('🚀 Initializing signup page...');
+
         // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
@@ -651,9 +671,35 @@
             console.log('- Videos:', videos.length);
         }
         
-        // Handle form submission
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        // Function to display errors on page
+        function showError(message) {
+            const errorDisplay = document.getElementById('errorDisplay');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorDisplay.style.display = 'block';
+            errorDisplay.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function hideError() {
+            document.getElementById('errorDisplay').style.display = 'none';
+        }
+
+        // Handle form submission - Wait for DOM to be ready
+        const signupForm = document.getElementById('signupForm');
+        
+        if (!signupForm) {
+            console.error('❌ Signup form not found!');
+        } else {
+            console.log('✅ Signup form found, attaching event listener');
+        }
+        
+        signupForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            hideError();
+            
+            console.log('🚀 Form submitted!');
+            console.log('Event default prevented:', e.defaultPrevented);
             
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
@@ -663,6 +709,8 @@
             const selectedRole = document.querySelector('input[name="userRole"]:checked').value;
             const termsCheckbox = document.getElementById('terms');
             const termsError = document.getElementById('termsError');
+            
+            console.log('📝 Form data:', { firstName, lastName, email, role: selectedRole });
             
             // Validate required fields
             if (!firstName || !lastName || !email || !password) {
@@ -703,113 +751,172 @@
             }
             
             const submitBtn = document.querySelector('.login-btn');
-            const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Creating Account...';
             submitBtn.disabled = true;
             
-            // Generate unique student code
-            function generateStudentCode() {
-                const prefix = 'BW';
-                const timestamp = Date.now().toString().slice(-6);
-                const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-                return `${prefix}-${timestamp}-${random}`;
-            }
-            
-            // Create user data
-            const level = selectedRole === 'student' ? document.getElementById('level').value : '';
-            const stream = selectedRole === 'student' ? document.getElementById('stream').value : '';
-            
-            // Calculate expiry date for bootcamp (7 days from now)
-            const bootcampExpiryDate = new Date();
-            bootcampExpiryDate.setDate(bootcampExpiryDate.getDate() + 7);
-            const expiryDateString = bootcampExpiryDate.toISOString().split('T')[0];
-            
-            const userData = {
-                id: Date.now(),
-                name: `${firstName} ${lastName}`,
-                email: email,
-                role: selectedRole,
-                plan: 'bootcamp',
-                status: 'bootcamp',
-                isPaid: false,
-                paymentStatus: 'bootcamp',
-                expiry: expiryDateString,
-                expiryDate: expiryDateString,
-                locked: false,
-                accountLocked: false,
-                joinDate: new Date().toISOString().split('T')[0],
-                bootcampStartDate: new Date().toISOString().split('T')[0],
-                paidDate: null,
-                planHistory: [{
-                    from: null,
-                    to: 'bootcamp',
-                    changedAt: new Date().toISOString(),
-                    changedBy: 'user_signup'
-                }],
-                // Email verification
-                emailVerified: false,
-                verifiedAt: null,
-                // Additional user info
-                userType: selectedRole === 'student' ? 'child' : 'parent',
-                classLevel: level,
-                stream: stream,
-                phone: '',
-                // Student-specific
-                studentCode: selectedRole === 'student' ? generateStudentCode() : null,
-                parentId: null,
-                // Parent-specific
-                childrenCount: selectedRole === 'parent' ? 0 : undefined,
-                children: selectedRole === 'parent' ? [] : undefined,
-                needsChildLinking: selectedRole === 'parent' ? true : false
-            };
-            
-            // Save to localStorage for admin dashboard
-            let users = JSON.parse(localStorage.getItem('brainwave_users')) || [];
-            users.push(userData);
-            localStorage.setItem('brainwave_users', JSON.stringify(users));
-            
-            // Also save to 'users' key for backward compatibility
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            console.log('New user saved to localStorage:', userData);
-            console.log('Total users now:', users.length);
-            
-            // Save user session
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-            
-            // Store email and role for confirmation page
-            localStorage.setItem('pendingUserEmail', userData.email);
-            localStorage.setItem('pendingUserRole', userData.role);
-            
-            // Store student code if student
-            if (selectedRole === 'student') {
-                localStorage.setItem('brainwave_current_student_id', userData.id);
-                localStorage.setItem('pendingStudentCode', userData.studentCode);
+            try {
+                console.log('🔄 Starting account creation...');
                 
-                // Generate mock data for the new student
-                console.log('🎓 Generating mock data for new student...');
-                generateStudentMockData(userData);
+                // Create user data
+                const level = selectedRole === 'student' ? document.getElementById('level').value : '';
+                const stream = selectedRole === 'student' ? document.getElementById('stream').value : '';
+                
+                console.log('🔐 Creating Firebase Auth user...');
+                
+                // Create Firebase Authentication user
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                console.log('✅ Firebase user created:', user.uid);
+                
+                console.log('📧 Sending verification email...');
+                
+                // Send email verification with action code settings
+                try {
+                    const actionCodeSettings = {
+                        url: window.location.origin + '/email-confirmation.html',
+                        handleCodeInApp: false
+                    };
+                    await sendEmailVerification(user, actionCodeSettings);
+                    console.log('✅ Verification email sent to:', user.email);
+                } catch (emailError) {
+                    console.error('❌ Email verification failed:', emailError);
+                    console.error('Error code:', emailError.code);
+                    console.error('Error message:', emailError.message);
+                    alert('⚠️ Warning: Could not send verification email. Error: ' + emailError.message);
+                }
+                
+                console.log('📅 Calculating expiry date...');
+                
+                // Calculate expiry date for bootcamp (7 days from now)
+                const expiryDate = getBootcampExpiryDate();
+                
+                console.log('📦 Preparing user data for Firestore...');
+                
+                // Prepare user data for Firestore (base data)
+                const userData = {
+                    name: `${firstName} ${lastName}`,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    role: selectedRole,
+                    plan: 'bootcamp',
+                    status: 'bootcamp',
+                    isPaid: false,
+                    paymentStatus: 'bootcamp',
+                    expiryDate: expiryDate,
+                    locked: false,
+                    accountLocked: false,
+                    joinDate: serverTimestamp(),
+                    bootcampStartDate: serverTimestamp(),
+                    paidDate: null,
+                    planHistory: [{
+                        from: null,
+                        to: 'bootcamp',
+                        changedAt: new Date().toISOString(),
+                        changedBy: 'user_signup'
+                    }],
+                    emailVerified: false,
+                    verifiedAt: null,
+                    userType: selectedRole === 'student' ? 'child' : 'parent',
+                    classLevel: level || '',
+                    stream: stream || '',
+                    phone: '',
+                    parentId: null,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+                
+                // Add role-specific fields
+                if (selectedRole === 'student') {
+                    userData.studentCode = generateStudentCode();
+                } else if (selectedRole === 'parent') {
+                    userData.childrenCount = 0;
+                    userData.children = [];
+                    userData.needsChildLinking = true;
+                }
+                
+                console.log('💾 Saving to Firestore...');
+                console.log('User data to save:', userData);
+                
+                // Save user data to Firestore
+                await setDoc(doc(db, 'users', user.uid), userData);
+                console.log('✅ User data saved to Firestore');
+                
+                // Save user session
+                const userSession = {
+                    uid: user.uid,
+                    email: email,
+                    name: userData.name,
+                    role: selectedRole,
+                    isLoggedIn: true
+                };
+                localStorage.setItem('currentUser', JSON.stringify(userSession));
+                
+                // Store email and role for confirmation page
+                localStorage.setItem('pendingUserEmail', email);
+                localStorage.setItem('pendingUserRole', selectedRole);
+                
+                // Store student code if student
+                if (selectedRole === 'student') {
+                    localStorage.setItem('pendingStudentCode', userData.studentCode);
+                    console.log('🎓 Student Code:', userData.studentCode);
+                }
+                
+                // Update button to show success
+                submitBtn.textContent = '✓ Account Created!';
+                submitBtn.style.background = '#10b981';
+                
+                console.log('✅ Signup complete!');
+                console.log('Current URL:', window.location.href);
+                console.log('🔄 Attempting redirect to email-confirmation.html...');
+                
+                // Try multiple redirect methods
+                setTimeout(() => {
+                    console.log('Redirect attempt 1: window.location.href');
+                    window.location.href = 'email-confirmation.html';
+                }, 100);
+                
+                setTimeout(() => {
+                    console.log('Redirect attempt 2: window.location.replace');
+                    window.location.replace('email-confirmation.html');
+                }, 500);
+                
+                setTimeout(() => {
+                    console.log('Redirect attempt 3: Full path');
+                    window.location.href = window.location.origin + '/email-confirmation.html';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Signup error:', error);
+                console.error('Error code:', error.code);
+                console.error('Error message:', error.message);
+                console.error('Full error:', error);
+                
+                submitBtn.textContent = 'Create Account';
+                submitBtn.disabled = false;
+                
+                // Handle specific Firebase errors
+                let errorMsg = '';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMsg = 'This email is already registered. Please login instead.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = 'Invalid email address.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMsg = 'Password is too weak. Please use a stronger password (min 8 characters).';
+                } else if (error.code === 'permission-denied') {
+                    errorMsg = 'Permission denied. Please check Firestore security rules in Firebase Console.';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMsg = 'Network error. Please check your internet connection.';
+                } else if (error.message.includes('fetch')) {
+                    errorMsg = 'Cannot connect to Firebase. Make sure you are running from http://localhost:8080 (not file://)';
+                } else {
+                    errorMsg = 'Signup failed: ' + error.message;
+                }
+                
+                showError(errorMsg);
+                alert(errorMsg);
             }
-            
-            console.log('✅ User data saved, preparing to redirect...');
-            console.log('Pending email:', userData.email);
-            console.log('Pending role:', userData.role);
-            
-            // Update button to show success
-            submitBtn.textContent = '✓ Account Created! Redirecting...';
-            submitBtn.style.background = '#10b981';
-            
-            // Show student code message for students (store for later display)
-            if (selectedRole === 'student') {
-                console.log('🎓 Student Code:', userData.studentCode);
-            }
-            
-            console.log('🔄 Redirecting to email-confirmation.html...');
-            
-            // Redirect to email confirmation page immediately
-            setTimeout(() => {
-                window.location.href = 'email-confirmation.html?v=' + Date.now();
-            }, 1500);
         });
         
         // Password validation
@@ -825,6 +932,8 @@
         
         password.addEventListener('change', validatePassword);
         confirmPassword.addEventListener('keyup', validatePassword);
+        
+        } // End of initializeSignup function
     </script>
 </body>
 </html>

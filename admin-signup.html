@@ -409,7 +409,9 @@
         <span id="toastMessage">Success!</span>
     </div>
 
-    <script>
+    <script type="module">
+        import { auth, db, createUserWithEmailAndPassword, sendEmailVerification, setDoc, doc, serverTimestamp } from './firebase-config.js';
+
         // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function() {
             const password = document.getElementById('password');
@@ -545,7 +547,7 @@
         }
 
         // Form submission
-        document.getElementById('adminSignupForm').addEventListener('submit', function(e) {
+        document.getElementById('adminSignupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             if (!validateForm()) {
@@ -553,47 +555,97 @@
                 return;
             }
 
-            // Get form data
-            const adminData = {
-                firstName: document.getElementById('firstName').value.trim(),
-                lastName: document.getElementById('lastName').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                phone: document.getElementById('phone').value.trim(),
-                password: document.getElementById('password').value,
-                role: 'admin',
-                status: 'active',
-                createdAt: new Date().toISOString(),
-                permissions: {
-                    users: true,
-                    content: true,
-                    assessments: true,
-                    reports: true,
-                    settings: true
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+
+            try {
+                // Get form data
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const password = document.getElementById('password').value;
+
+                console.log('🔐 Creating Firebase Auth admin user...');
+
+                // Create Firebase Authentication user
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                console.log('✅ Firebase admin user created:', user.uid);
+                console.log('📧 Sending verification email...');
+
+                // Send email verification with action code settings
+                try {
+                    const actionCodeSettings = {
+                        url: window.location.origin + '/admin-email-confirmation.html',
+                        handleCodeInApp: false
+                    };
+                    await sendEmailVerification(user, actionCodeSettings);
+                    console.log('✅ Verification email sent to:', user.email);
+                } catch (emailError) {
+                    console.error('❌ Email verification failed:', emailError);
+                    console.error('Error code:', emailError.code);
+                    console.error('Error message:', emailError.message);
+                    alert('⚠️ Warning: Could not send verification email. Error: ' + emailError.message);
                 }
-            };
 
-            // Save to localStorage
-            let admins = JSON.parse(localStorage.getItem('admins')) || [];
-            
-            // Check if email already exists
-            if (admins.some(admin => admin.email === adminData.email)) {
-                showToast('An admin with this email already exists', 'error');
-                return;
+                // Prepare admin data for Firestore
+                const adminData = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    name: `${firstName} ${lastName}`,
+                    email: email,
+                    phone: phone,
+                    role: 'admin',
+                    status: 'active',
+                    emailVerified: false,
+                    verifiedAt: null,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    permissions: {
+                        users: true,
+                        content: true,
+                        assessments: true,
+                        reports: true,
+                        settings: true
+                    }
+                };
+
+                console.log('💾 Saving admin data to Firestore...');
+
+                // Save admin data to Firestore
+                await setDoc(doc(db, 'admins', user.uid), adminData);
+                console.log('✅ Admin data saved to Firestore');
+
+                // Store email for confirmation page
+                localStorage.setItem('pendingAdminEmail', email);
+
+                // Show success message
+                showToast('Admin account created successfully!', 'success');
+
+                // Redirect to email confirmation page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'admin-email-confirmation.html';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Admin signup error:', error);
+                submitBtn.textContent = 'Create Admin Account';
+                submitBtn.disabled = false;
+
+                // Handle specific Firebase errors
+                if (error.code === 'auth/email-already-in-use') {
+                    showToast('An account with this email already exists', 'error');
+                } else if (error.code === 'auth/weak-password') {
+                    showToast('Password is too weak. Please use a stronger password.', 'error');
+                } else if (error.code === 'auth/invalid-email') {
+                    showToast('Invalid email address', 'error');
+                } else {
+                    showToast('Error creating account: ' + error.message, 'error');
+                }
             }
-
-            admins.push(adminData);
-            localStorage.setItem('admins', JSON.stringify(admins));
-
-            // Store email for confirmation page
-            localStorage.setItem('pendingAdminEmail', adminData.email);
-
-            // Show success message
-            showToast('Admin account created successfully!', 'success');
-
-            // Redirect to email confirmation page after 2 seconds
-            setTimeout(() => {
-                window.location.href = 'admin-email-confirmation.html';
-            }, 2000);
         });
 
         // Real-time validation

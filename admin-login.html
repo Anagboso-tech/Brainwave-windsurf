@@ -55,9 +55,11 @@
 
 
 
-    <script>
+    <script type="module">
+        import { auth, signInWithEmailAndPassword, db, doc, getDoc } from './firebase-config.js';
+
         // Handle admin login form submission
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const email = document.getElementById('adminEmail').value.trim();
@@ -72,49 +74,49 @@
             // Show loading state
             showLoading();
             
-            // Authenticate admin
-            setTimeout(() => {
-                // Get admins from localStorage
-                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
-                const admin = admins.find(a => a.email.toLowerCase() === email.toLowerCase());
+            try {
+                // Sign in with Firebase Authentication
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
                 
-                if (!admin) {
-                    hideLoading();
-                    showError('Invalid credentials. Access denied.');
-                    console.warn('Failed admin login attempt:', email);
-                    return;
-                }
-                
-                // In production, verify password hash here
-                // For now, we accept any password for demo purposes
-                if (admin.password !== password) {
-                    hideLoading();
-                    showError('Invalid credentials. Access denied.');
-                    console.warn('Failed admin login attempt:', email);
-                    return;
-                }
-                
-                // Check if admin is active
-                if (admin.status !== 'active') {
-                    hideLoading();
-                    showError('Your admin account has been deactivated. Contact support.');
-                    return;
-                }
+                console.log('✅ Admin authenticated:', user.uid);
                 
                 // Check if email is verified
-                if (!admin.emailVerified) {
+                if (!user.emailVerified) {
                     hideLoading();
+                    await auth.signOut();
                     showError('Please verify your email address before logging in. Check your inbox for the verification link.');
+                    return;
+                }
+                
+                // Get admin data from Firestore
+                const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+                
+                if (!adminDoc.exists()) {
+                    hideLoading();
+                    await auth.signOut();
+                    showError('Admin account not found. Please contact support.');
+                    return;
+                }
+                
+                const adminData = adminDoc.data();
+                
+                // Check if admin is active
+                if (adminData.status !== 'active') {
+                    hideLoading();
+                    await auth.signOut();
+                    showError('Your admin account has been deactivated. Contact support.');
                     return;
                 }
                 
                 // Store admin session data
                 const adminSession = {
-                    id: admin.email,
-                    name: `${admin.firstName} ${admin.lastName}`,
-                    email: admin.email,
+                    uid: user.uid,
+                    id: user.email,
+                    name: adminData.name || `${adminData.firstName} ${adminData.lastName}`,
+                    email: user.email,
                     role: 'admin',
-                    permissions: admin.permissions,
+                    permissions: adminData.permissions,
                     isLoggedIn: true,
                     loginTime: new Date().toISOString(),
                     sessionId: generateSessionId()
@@ -131,7 +133,24 @@
                 setTimeout(() => {
                     window.location.href = 'admin-dashboard.html';
                 }, 1000);
-            }, 1500);
+                
+            } catch (error) {
+                hideLoading();
+                console.error('Admin login error:', error);
+                
+                // Handle specific Firebase errors
+                if (error.code === 'auth/user-not-found') {
+                    showError('Invalid credentials. Access denied.');
+                } else if (error.code === 'auth/wrong-password') {
+                    showError('Invalid credentials. Access denied.');
+                } else if (error.code === 'auth/invalid-email') {
+                    showError('Invalid email address.');
+                } else if (error.code === 'auth/too-many-requests') {
+                    showError('Too many failed login attempts. Please try again later.');
+                } else {
+                    showError('Login failed: ' + error.message);
+                }
+            }
         });
         
         // Generate session ID (simplified for demo)

@@ -392,15 +392,15 @@
                 <ul>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>Click "Simulate Email Verification" below to verify your account</span>
+                        <span>Check your email inbox for the verification link</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>After verification, you'll be redirected to the login page</span>
+                        <span>Click the link in the email to verify your account</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
-                        <span>Login with your email and password to access your dashboard</span>
+                        <span>After verification, return here and click "Check Verification Status"</span>
                     </li>
                     <li>
                         <i class="fas fa-check-circle"></i>
@@ -410,13 +410,10 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-verify" id="verifyBtn" onclick="simulateVerification()">
-                    <i class="fas fa-check-double"></i> Simulate Email Verification
+                <button class="btn btn-verify" id="verifyBtn" onclick="checkVerificationStatus()">
+                    <i class="fas fa-sync-alt"></i> Check Verification Status
                 </button>
-                <button class="btn btn-primary" id="dashboardBtn" onclick="goToDashboard()" style="display: none;">
-                    <i class="fas fa-tachometer-alt"></i> Go to Dashboard
-                </button>
-                <a href="login.html" class="btn btn-primary" id="loginBtn">
+                <a href="login.html" class="btn btn-primary" id="loginBtn" style="display: none;">
                     <i class="fas fa-sign-in-alt"></i> Go to Login Page
                 </a>
                 <button class="btn btn-secondary" onclick="resendEmail()">
@@ -426,7 +423,11 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { auth, sendEmailVerification, db, doc, getDoc, updateDoc } from './firebase-config.js';
+
+        let checkInterval;
+
         // Load and display the email
         window.addEventListener('DOMContentLoaded', function() {
             const email = localStorage.getItem('pendingUserEmail');
@@ -452,120 +453,144 @@
             }
 
             console.log('Pending user role:', userRole);
+
+            // Auto-check verification status every 3 seconds
+            checkInterval = setInterval(autoCheckVerification, 3000);
         });
 
-        // Simulate email verification (for demo purposes)
-        function simulateVerification() {
+        // Auto-check verification status
+        async function autoCheckVerification() {
+            if (!auth.currentUser) return;
+
+            try {
+                await auth.currentUser.reload();
+                if (auth.currentUser.emailVerified) {
+                    clearInterval(checkInterval);
+                    await handleVerificationSuccess();
+                }
+            } catch (error) {
+                console.error('Auto-check error:', error);
+            }
+        }
+
+        // Check email verification status
+        async function checkVerificationStatus() {
             const verifyBtn = document.getElementById('verifyBtn');
             const statusDiv = document.getElementById('verificationStatus');
             
+            if (!auth.currentUser) {
+                alert('❌ Session expired. Please sign up again.');
+                window.location.href = 'signup.html';
+                return;
+            }
+
             // Disable button and show loading
             verifyBtn.disabled = true;
-            verifyBtn.innerHTML = '<span class="loading"></span> Verifying...';
+            verifyBtn.innerHTML = '<span class="loading"></span> Checking...';
             
-            // Simulate verification delay
-            setTimeout(() => {
-                // Update verification status
-                statusDiv.className = 'verification-status verified';
-                statusDiv.innerHTML = `
-                    <i class="fas fa-check-circle status-icon"></i>
-                    <div class="status-text">
-                        <h3>Email Verified!</h3>
-                        <p>Your account is now active and ready to use</p>
-                    </div>
-                `;
+            try {
+                // Reload user to get latest emailVerified status
+                await auth.currentUser.reload();
                 
-                // Update user account status in localStorage
-                const email = localStorage.getItem('pendingUserEmail');
-                const userRole = localStorage.getItem('pendingUserRole');
-                
-                console.log('🔍 Verifying user:', email, 'Role:', userRole);
-                
-                if (email) {
-                    let users = JSON.parse(localStorage.getItem('brainwave_users')) || [];
-                    console.log('📋 Total users in system:', users.length);
-                    
-                    const userIndex = users.findIndex(user => user.email === email);
-                    console.log('🔎 User index found:', userIndex);
-                    
-                    if (userIndex !== -1) {
-                        // Mark email as verified (but don't log them in yet)
-                        users[userIndex].emailVerified = true;
-                        users[userIndex].verifiedAt = new Date().toISOString();
-                        
-                        // Save updated user data
-                        localStorage.setItem('brainwave_users', JSON.stringify(users));
-                        localStorage.setItem('users', JSON.stringify(users));
-                        
-                        console.log('✅ Email verified successfully');
-                        console.log('👤 User data:', {
-                            email: users[userIndex].email,
-                            role: users[userIndex].role,
-                            name: users[userIndex].name,
-                            id: users[userIndex].id,
-                            emailVerified: users[userIndex].emailVerified
-                        });
-                        
-                        // Clear pending data
-                        localStorage.removeItem('pendingUserEmail');
-                        localStorage.removeItem('pendingUserRole');
-                        localStorage.removeItem('pendingStudentCode');
-                    } else {
-                        console.error('❌ User not found in brainwave_users!');
-                        console.log('Available users:', users.map(u => ({ email: u.email, role: u.role })));
-                    }
+                if (auth.currentUser.emailVerified) {
+                    await handleVerificationSuccess();
                 } else {
-                    console.error('❌ No pending email found!');
+                    // Not verified yet
+                    verifyBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Check Verification Status';
+                    verifyBtn.disabled = false;
+                    alert('⏳ Email not verified yet. Please check your inbox and click the verification link, then try again.');
                 }
-                
-                // Update button
-                verifyBtn.innerHTML = '<i class="fas fa-check-double"></i> Verified Successfully!';
-                verifyBtn.style.background = '#10b981';
-                
-                // Hide verify button and show login button prominently
-                const dashboardBtn = document.getElementById('dashboardBtn');
-                const loginBtn = document.getElementById('loginBtn');
-                dashboardBtn.style.display = 'none';
-                loginBtn.style.display = 'inline-flex';
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Proceed to Login';
-                loginBtn.style.animation = 'pulse 2s infinite';
-                
-                // Show success message
-                alert('✅ Email verified successfully! Please login to access your dashboard.');
-                
-                // Redirect to login page
-                setTimeout(() => {
-                    console.log('🚀 Redirecting to login page...');
-                    window.location.href = 'login.html';
-                }, 2000);
+            } catch (error) {
+                console.error('Verification check error:', error);
+                verifyBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Check Verification Status';
+                verifyBtn.disabled = false;
+                alert('❌ Error checking verification status: ' + error.message);
+            }
+        }
+
+        // Handle successful verification
+        async function handleVerificationSuccess() {
+            const verifyBtn = document.getElementById('verifyBtn');
+            const statusDiv = document.getElementById('verificationStatus');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Update verification status UI
+            statusDiv.className = 'verification-status verified';
+            statusDiv.innerHTML = `
+                <i class="fas fa-check-circle status-icon"></i>
+                <div class="status-text">
+                    <h3>Email Verified!</h3>
+                    <p>Your account is now active and ready to use</p>
+                </div>
+            `;
+            
+            // Update Firestore with verification status
+            try {
+                const userDocRef = doc(db, 'users', auth.currentUser.uid);
+                await updateDoc(userDocRef, {
+                    emailVerified: true,
+                    verifiedAt: new Date().toISOString()
+                });
+                console.log('✅ Firestore updated with verification status');
+            } catch (error) {
+                console.warn('⚠️ Could not update Firestore:', error);
+            }
+            
+            // Clear pending data
+            localStorage.removeItem('pendingUserEmail');
+            localStorage.removeItem('pendingUserRole');
+            localStorage.removeItem('pendingStudentCode');
+            
+            // Update button
+            verifyBtn.innerHTML = '<i class="fas fa-check-double"></i> Verified Successfully!';
+            verifyBtn.style.background = '#10b981';
+            verifyBtn.disabled = true;
+            
+            // Show login button prominently
+            loginBtn.style.display = 'inline-flex';
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Proceed to Login';
+            loginBtn.style.animation = 'pulse 2s infinite';
+            
+            // Show success message
+            alert('✅ Email verified successfully! Please login to access your dashboard.');
+            
+            // Redirect to login page
+            setTimeout(() => {
+                console.log('🚀 Redirecting to login page...');
+                window.location.href = 'login.html';
             }, 2000);
         }
 
-        // Go to dashboard after verification
-        function goToDashboard() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-            
-            if (currentUser.role === 'student') {
-                window.location.href = 'student-dashboard.html';
-            } else if (currentUser.role === 'parent') {
-                window.location.href = 'parent-dashboard.html';
-            } else {
-                window.location.href = 'login.html';
-            }
-        }
-
-        // Resend verification email (simulated)
-        function resendEmail() {
-            const email = localStorage.getItem('pendingUserEmail');
-            
-            if (!email) {
-                alert('❌ No email address found. Please try signing up again.');
+        // Resend verification email
+        async function resendEmail() {
+            if (!auth.currentUser) {
+                alert('❌ Session expired. Please sign up again.');
+                window.location.href = 'signup.html';
                 return;
             }
             
-            // Simulate sending email
-            alert(`📧 Verification email has been resent to:\n${email}\n\nPlease check your inbox (and spam folder).`);
+            try {
+                const actionCodeSettings = {
+                    url: window.location.origin + '/email-confirmation.html',
+                    handleCodeInApp: false
+                };
+                await sendEmailVerification(auth.currentUser, actionCodeSettings);
+                console.log('✅ Verification email resent to:', auth.currentUser.email);
+                alert(`📧 Verification email has been resent to:\n${auth.currentUser.email}\n\nPlease check your inbox (and spam folder).`);
+            } catch (error) {
+                console.error('Resend email error:', error);
+                console.error('Error code:', error.code);
+                if (error.code === 'auth/too-many-requests') {
+                    alert('❌ Too many requests. Please wait a few minutes before trying again.');
+                } else {
+                    alert('❌ Error sending email: ' + error.message);
+                }
+            }
         }
+
+        // Make functions globally available
+        window.checkVerificationStatus = checkVerificationStatus;
+        window.resendEmail = resendEmail;
 
         // Prevent back navigation after signup
         history.pushState(null, null, location.href);

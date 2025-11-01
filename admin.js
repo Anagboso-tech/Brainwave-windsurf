@@ -3247,38 +3247,8 @@ class AdminDashboard {
     }
 
     generateSampleStudentData() {
-        const names = [
-            'Adebayo Johnson', 'Chioma Okonkwo', 'Ibrahim Mohammed', 'Blessing Eze',
-            'Tunde Adeyemi', 'Ngozi Okoro', 'Yusuf Abdullahi', 'Funke Ajayi',
-            'Emeka Nwosu', 'Aisha Bello', 'Segun Oladipo', 'Amaka Chukwu',
-            'Musa Garba', 'Folake Williams', 'Chidi Obi', 'Zainab Hassan'
-        ];
-        
-        const classes = ['SS1', 'SS2', 'SS3'];
-        const streams = ['Science', 'Humanities', 'Business'];
-        
-        this.studentScores = names.map((name, index) => ({
-            id: Date.now() + index,
-            name: name,
-            classLevel: classes[index % 3],
-            stream: streams[index % 3],
-            scores: {
-                Mathematics: Math.floor(Math.random() * 40) + 60,
-                'English Language': Math.floor(Math.random() * 40) + 60,
-                Physics: Math.floor(Math.random() * 40) + 55,
-                Chemistry: Math.floor(Math.random() * 40) + 55,
-                Biology: Math.floor(Math.random() * 40) + 60,
-                Economics: Math.floor(Math.random() * 40) + 60
-            },
-            attendance: Math.floor(Math.random() * 30) + 70, // 70-100%
-            manualGrade: null, // Manual grade override (null = auto-calculate)
-            customBadge: '', // Custom badge for leaderboard
-            performanceBadge: '', // Custom performance badge
-            attendanceBadge: '', // Custom attendance badge
-            subjectBadge: '', // Custom subject excellence badge
-            totalBadges: 0 // Custom total badges count
-        }));
-        
+        // Mock data generation disabled - use real data from Firebase
+        this.studentScores = [];
         this.saveToStorage('studentScores', this.studentScores);
     }
 
@@ -4485,79 +4455,8 @@ class AdminDashboard {
     }
 
     generateSampleUsers() {
-        const today = new Date();
-        const bootcampStartDate = new Date(today);
-        bootcampStartDate.setDate(today.getDate() - 2); // Started 2 days ago
-        
-        const sampleUsers = [
-            {
-                id: 1,
-                name: "John Doe",
-                email: "john.doe@example.com",
-                plan: "30",
-                planType: "individual",
-                status: "active",
-                expiry: "2024-11-15",
-                locked: false,
-                joinDate: "2024-10-01",
-                bootcampStartDate: null,
-                planHistory: [
-                    {
-                        from: "bootcamp",
-                        to: "30",
-                        changedAt: "2024-10-05T10:30:00.000Z",
-                        changedBy: "admin"
-                    }
-                ]
-            },
-            {
-                id: 2,
-                name: "Jane Smith",
-                email: "jane.smith@example.com",
-                plan: "bootcamp",
-                planType: "individual",
-                status: "bootcamp",
-                expiry: null,
-                locked: false,
-                joinDate: "2024-10-02",
-                bootcampStartDate: bootcampStartDate.toISOString().split('T')[0],
-                planHistory: [
-                    {
-                        from: null,
-                        to: "bootcamp",
-                        changedAt: "2024-10-02T09:15:00.000Z",
-                        changedBy: "admin"
-                    }
-                ]
-            },
-            {
-                id: 3,
-                name: "Mike Johnson",
-                email: "mike.johnson@example.com",
-                plan: "60",
-                planType: "family",
-                status: "active",
-                expiry: "2024-12-03",
-                locked: true,
-                joinDate: "2024-09-15",
-                bootcampStartDate: null,
-                planHistory: [
-                    {
-                        from: "bootcamp",
-                        to: "30",
-                        changedAt: "2024-09-20T14:20:00.000Z",
-                        changedBy: "admin"
-                    },
-                    {
-                        from: "30",
-                        to: "60",
-                        changedAt: "2024-09-25T16:45:00.000Z",
-                        changedBy: "admin"
-                    }
-                ]
-            }
-        ];
-        
+        // Mock data generation disabled - use real data from Firebase
+        const sampleUsers = [];
         this.saveToStorage('users', sampleUsers);
         return sampleUsers;
     }
