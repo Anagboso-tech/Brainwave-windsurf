@@ -43,7 +43,7 @@
     </div>
 
     <script type="module">
-        import { auth, signInWithEmailAndPassword, checkAccountStatus, getDoc, doc, db } from './firebase-config.js';
+        import { auth, signInWithEmailAndPassword, checkAccountStatus, getDoc, doc, db, updateDoc } from './firebase-config.js';
 
         // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -67,11 +67,14 @@
                 
                 console.log('✅ User authenticated:', user.uid);
                 
+                // Reload user to get latest email verification status
+                await user.reload();
+                
                 // Check if email is verified
                 if (!user.emailVerified) {
                     hideLoading();
                     await auth.signOut();
-                    alert('❌ Please verify your email address before logging in. Check your inbox for the verification link.');
+                    alert('❌ Please verify your email address before logging in. Check your inbox for the verification link.\n\nIf you just verified your email, please wait a moment and try logging in again.');
                     return;
                 }
                 

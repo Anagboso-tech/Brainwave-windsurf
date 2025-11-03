@@ -571,7 +571,7 @@
             
             try {
                 const actionCodeSettings = {
-                    url: window.location.origin + '/email-confirmation.html',
+                    url: window.location.origin + '/verify-email.html',
                     handleCodeInApp: false
                 };
                 await sendEmailVerification(auth.currentUser, actionCodeSettings);
